@@ -4,6 +4,7 @@ import { Shell } from "@/components/Shell";
 import { CodeCompare } from "@/components/CodeCompare";
 import { CompareTable } from "@/components/CompareTable";
 import { PlatformFilter } from "@/components/PlatformFilter";
+import { Quiz } from "@/components/Quiz";
 import { ALL_CHAPTERS } from "@/content/outline";
 import { CHAPTERS } from "@/content/chapters";
 import type { Chapter, OutlineChapter } from "@/content/types";
@@ -115,6 +116,11 @@ async function ChapterBody({ meta, chapter }: { meta: OutlineChapter; chapter: C
                 Cheat sheet
               </a>
             </li>
+            <li>
+              <a href="#quiz" className="hover:text-zinc-900">
+                Quiz
+              </a>
+            </li>
           </ol>
         </div>
       </div>
@@ -171,6 +177,14 @@ async function ChapterBody({ meta, chapter }: { meta: OutlineChapter; chapter: C
               <h2 className="text-2xl font-semibold tracking-tight text-zinc-900">Cheat sheet</h2>
               <div className="mt-6">
                 <CompareTable rows={chapter.cheatsheet.map((values) => ({ values }))} />
+              </div>
+            </section>
+
+            <section id="quiz" className="scroll-mt-20">
+              <h2 className="text-2xl font-semibold tracking-tight text-zinc-900">Check yourself</h2>
+              <p className="mt-2 max-w-3xl text-zinc-600">A quick quiz on this chapter. Pick an answer to see why it&apos;s right or wrong.</p>
+              <div className="mt-6">
+                <Quiz questions={chapter.quiz} />
               </div>
             </section>
           </div>

@@ -19,6 +19,14 @@ export type Section = {
   callout?: string;
 };
 
+export type QuizQuestion = {
+  question: string;
+  options: string[];
+  /** Index into options */
+  answer: number;
+  explanation: string;
+};
+
 export type Chapter = {
   slug: string;
   title: string;
@@ -26,6 +34,7 @@ export type Chapter = {
   sections: Section[];
   gotchas: { title: string; body: string }[];
   cheatsheet: PerPlatform<string>[];
+  quiz: QuizQuestion[];
 };
 
 export type OutlineChapter = {

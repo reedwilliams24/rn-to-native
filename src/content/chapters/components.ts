@@ -267,4 +267,67 @@ export const components: Chapter = {
     { rn: "`<Pressable onPress>`", android: "`Modifier.clickable`", ios: "`Button(action:)`" },
     { rn: "Storybook / Fast Refresh", android: "`@Preview`", ios: "`#Preview`" },
   ],
+  quiz: [
+    {
+      question: "You want a `Card` composable that accepts an optional icon, the way an RN component accepts `icon?: ReactNode`. What's the idiomatic parameter type?",
+      options: [
+        "`icon: View? = null`",
+        "`icon: (@Composable () -> Unit)? = null`",
+        "`icon: Modifier = Modifier`",
+        "`icon: Any? = null`, rendered with `Box(icon)`",
+      ],
+      answer: 1,
+      explanation: "Composables emit UI rather than return it, so you pass UI around as a composable lambda. Call it with `icon?.invoke()` where it should appear.",
+    },
+    {
+      question: "In Compose, which chain paints the blue background behind the padding as well?",
+      options: [
+        "`Modifier.padding(16.dp).background(Blue)`",
+        "`Modifier.background(Blue).padding(16.dp)`",
+        "Both look the same",
+        "Neither; padding is never painted",
+      ],
+      answer: 1,
+      explanation: "Compose modifiers apply from outside in. `background` first paints the full area, then `padding` insets the content. In SwiftUI it's the opposite: `.padding(16).background(.blue)` paints behind the padding.",
+    },
+    {
+      question: "Where should a SwiftUI view start loading data from the network?",
+      options: [
+        "In the struct's `init`",
+        "At the top of `body`",
+        "In a `.task { }` modifier",
+        "In a `static let` on the view",
+      ],
+      answer: 2,
+      explanation: "SwiftUI creates view structs and evaluates `body` often, so side effects there run repeatedly. `.task` runs when the view appears and is cancelled automatically when it disappears.",
+    },
+    {
+      question: "You render `ForEach(todos) { todo in Row(todo) }` in SwiftUI. What must be true about `Todo`?",
+      options: [
+        "Nothing; SwiftUI uses array indexes like React's default",
+        "It must conform to `Identifiable` (or you pass `id:`)",
+        "It must be a `class`",
+        "It must conform to `Codable`",
+      ],
+      answer: 1,
+      explanation: "SwiftUI requires stable identity for collections. React only warns about a missing `key`, but SwiftUI won't compile without one.",
+    },
+    {
+      question: "A tap handler needs to show an error message. What's the right move in Compose?",
+      options: [
+        "Call `Text(\"Error\")` inside the `onClick` lambda",
+        "Set a state variable (e.g. `error = \"…\"`) and let the composable render `Text` when it's non-null",
+        "Return a composable from `onClick`",
+        "Use `LaunchedEffect` inside `onClick`",
+      ],
+      answer: 1,
+      explanation: "Composables can only be called from other composables, just like hooks only run during render. Event handlers change state, and the UI reacts to it, the same as `setError` in React.",
+    },
+    {
+      question: "In Compose, `16` in RN's `fontSize: 16` becomes…",
+      options: ["`16.dp`", "`16.sp`", "`16.px`", "`16f`"],
+      answer: 1,
+      explanation: "Use `sp` for text so it scales with the user's font-size setting, and `dp` for layout. SwiftUI uses plain points and scales text with Dynamic Type through text styles like `.body`.",
+    },
+  ],
 };
