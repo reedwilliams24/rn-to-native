@@ -40,6 +40,11 @@ export function Quiz({ questions }: { questions: QuizQuestion[] }) {
                     className={`block w-full rounded-md border px-3 py-2 text-left text-sm transition-colors ${tone}`}
                   >
                     <Inline text={opt} />
+                    {done && isAnswer ? (
+                      <span className="ml-2 text-xs font-medium text-emerald-700">✓ Correct answer</span>
+                    ) : done && isChoice ? (
+                      <span className="ml-2 text-xs font-medium text-rose-700">✗ Your answer</span>
+                    ) : null}
                   </button>
                 );
               })}
