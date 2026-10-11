@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState, useSyncExternalStore } from "react";
+import { useEffect, useState, useSyncExternalStore } from "react";
 import { PLATFORMS, type PerPlatform, type Platform } from "@/content/types";
 import { Inline } from "@/lib/inline";
 import { PLATFORM_STYLE } from "../platform";
@@ -250,27 +250,7 @@ export function ThreadingTimeline() {
   const [scenario, setScenario] = useState<Scenario>("ok");
   const [current, setCurrent] = useState(-1);
   const [playing, setPlaying] = useState(false);
-  const ref = useRef<HTMLElement>(null);
-  const seen = useRef(false);
   const last = STEP_NAMES.length - 1;
-
-  useEffect(() => {
-    if (reduced || seen.current || !ref.current) return;
-    const el = ref.current;
-    const io = new IntersectionObserver(
-      ([entry]) => {
-        if (entry?.isIntersecting && !seen.current) {
-          seen.current = true;
-          setCurrent(-1);
-          setPlaying(true);
-          io.disconnect();
-        }
-      },
-      { threshold: 0.4 },
-    );
-    io.observe(el);
-    return () => io.disconnect();
-  }, [reduced]);
 
   useEffect(() => {
     if (!playing || reduced) return;
@@ -283,20 +263,17 @@ export function ThreadingTimeline() {
   }, [playing, reduced, current, last]);
 
   function pick(s: Scenario) {
-    seen.current = true;
     setScenario(s);
     setCurrent(-1);
-    setPlaying(!reduced);
+    setPlaying(false);
   }
 
   function play() {
-    seen.current = true;
     setCurrent(-1);
     setPlaying(true);
   }
 
   function step() {
-    seen.current = true;
     setPlaying(false);
     setCurrent((c) => (c >= last ? -1 : c + 1));
   }
@@ -304,7 +281,7 @@ export function ThreadingTimeline() {
   const stepLabel = current < 0 ? "Before the tap" : `Step ${current + 1} of ${STEP_NAMES.length}: ${STEP_NAMES[current]}`;
 
   return (
-    <figure ref={ref} className="max-w-5xl overflow-hidden rounded-xl border border-zinc-200 bg-white">
+    <figure className="max-w-5xl overflow-hidden rounded-xl border border-zinc-200 bg-white">
       <style>{THREAD_CSS}</style>
       <div className="flex flex-wrap items-center gap-2 border-b border-zinc-200 bg-zinc-50 px-4 py-3">
         <span className="mr-1 text-xs font-semibold uppercase tracking-wide text-zinc-500">Interactive</span>
