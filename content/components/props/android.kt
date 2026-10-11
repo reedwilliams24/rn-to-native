@@ -1,10 +1,10 @@
-@Composable
-fun Greeting(
-    name: String,
-    excited: Boolean = false,
+@Composable // @link:fn
+fun Greeting( // @link:fn,props
+    name: String, // @link:name
+    excited: Boolean = false, // @link:excited,default
 ) {
-    Text("Hello, $name${if (excited) "!" else "."}")
+    Text("Hello, $name${if (excited) "!" else "."}") // @link:text
 }
 
 // Usage
-Greeting(name = "Reed", excited = true)
+Greeting(name = "Reed", excited = true) // @link:usage

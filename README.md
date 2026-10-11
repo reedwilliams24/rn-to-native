@@ -34,3 +34,17 @@ You can check out [the Next.js GitHub repository](https://github.com/vercel/next
 The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+
+## Linked lines in snippets
+
+A snippet's three files (`content/<chapter>/<snippet>/{rn.tsx,android.kt,ios.swift}`) can tie equivalent lines together. Hovering, focusing, or tapping one of those lines highlights the matching lines in the other columns. To link a line, end it with a marker:
+
+```kotlin
+var count by remember { mutableStateOf(0) } // @link:state
+```
+
+- Use `// @link:<id>` at the end of a line. Inside JSX children, where `//` would render as text, use `{/* @link:<id> */}`.
+- Give one line several ids with commas (`// @link:fn,props`). Lines match when they share any id.
+- An id has to appear in at least two of the three files, or the build fails. This catches typos.
+- Markers are removed before Shiki highlights the code, so they never show up on the site. Because they're ordinary comments, the `.kt` and `.swift` files still compile.
+- Snippets without markers render exactly as before. `content/components/` is fully annotated and works as a reference.

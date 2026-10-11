@@ -1,16 +1,16 @@
-@Composable
-fun Chip(
-    label: String,
-    modifier: Modifier = Modifier,
+@Composable // @link:fn
+fun Chip( // @link:fn,props
+    label: String, // @link:label
+    modifier: Modifier = Modifier, // @link:style-param
 ) {
-    Text(
-        text = label,
-        fontSize = 14.sp,
-        fontWeight = FontWeight.SemiBold,
-        color = Color(0xFF1A56DB),
-        modifier = modifier
+    Text( // @link:text
+        text = label, // @link:text
+        fontSize = 14.sp, // @link:font
+        fontWeight = FontWeight.SemiBold, // @link:font
+        color = Color(0xFF1A56DB), // @link:color
+        modifier = modifier // @link:container,style-param
             // outer → inner: background first, then padding inside it
-            .background(Color(0xFFE8F0FE), RoundedCornerShape(16.dp))
-            .padding(horizontal = 12.dp, vertical = 6.dp),
+            .background(Color(0xFFE8F0FE), RoundedCornerShape(16.dp)) // @link:background
+            .padding(horizontal = 12.dp, vertical = 6.dp), // @link:padding
     )
 }

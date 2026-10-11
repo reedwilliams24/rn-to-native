@@ -1,11 +1,11 @@
-struct Greeting: View {
-    let name: String
-    var excited = false
+struct Greeting: View { // @link:fn,props
+    let name: String // @link:name
+    var excited = false // @link:excited,default
 
-    var body: some View {
-        Text("Hello, \(name)\(excited ? "!" : ".")")
+    var body: some View { // @link:body
+        Text("Hello, \(name)\(excited ? "!" : ".")") // @link:text
     }
 }
 
 // Usage
-Greeting(name: "Reed", excited: true)
+Greeting(name: "Reed", excited: true) // @link:usage
