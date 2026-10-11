@@ -62,6 +62,19 @@ export const state: Chapter = {
         "No stale closures. Because writes land immediately and you read the variable directly, `count++` twice in one handler gives you `+2`. The `setCount(c => c + 1)` updater pattern isn't needed on native.",
     },
     {
+      id: "what-reruns",
+      title: "See it: what re-runs, and what keeps its state",
+      prose: [
+        "**React** re-renders the component that owns the changed state and, by default, everything below it. As the docs put it, \"React normally re-renders a component whenever its parent re-renders.\" Wrapping a child in `memo` skips it when every prop is `Object.is`-equal to last time ([React: memo](https://react.dev/reference/react/memo)).",
+        "**Compose** re-runs the composables that read the changed state, and skips a child whose inputs haven't changed ([Compose: lifecycle, skipping](https://developer.android.com/develop/ui/compose/lifecycle#skipping)). Without strong skipping, a parameter of an unstable type makes the composable non-skippable, and `List`, `Set` and `Map` count as unstable ([Compose: stability](https://developer.android.com/develop/ui/compose/performance/stability)). Strong skipping is on by default from Kotlin 2.0.20. It compares unstable parameters by instance (`===`) and stable ones with `equals()` ([Compose: strong skipping](https://developer.android.com/develop/ui/compose/performance/stability/strongskipping)).",
+        "**SwiftUI** treats a view's inputs and its `@State` and environment as its dependencies, and re-runs `body` only for views \"that have new values or other changed dependencies\" ([WWDC23: Demystify SwiftUI performance](https://developer.apple.com/videos/play/wwdc2023/10160/)).",
+        "State is tied to *identity*, and that's where RN habits break. React keeps state for the same component type at the same position, so `isFancy ? <Counter isFancy /> : <Counter />` keeps the count ([React: preserving and resetting state](https://react.dev/learn/preserving-and-resetting-state)). Compose identifies each instance by its *call site*, so the calls in `if` and `else` are two different instances ([Compose: lifecycle](https://developer.android.com/develop/ui/compose/lifecycle)). SwiftUI treats each branch of an `if` as a different view with a distinct identity, which can lose state ([WWDC21: Demystify SwiftUI](https://developer.apple.com/videos/play/wwdc2021/10022/)). On both native platforms the fix is one call with a conditional argument or modifier.",
+      ],
+      diagram: "recomposition",
+      callout:
+        "To check this in a real app, Android Studio's Layout Inspector shows recomposition and skip counts per composable, and Instruments has a SwiftUI template that records `body` evaluations.",
+    },
+    {
       id: "use-state",
       title: "useState → remember / @State",
       prose: [

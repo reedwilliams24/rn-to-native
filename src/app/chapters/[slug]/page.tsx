@@ -6,6 +6,7 @@ import { CompareTable } from "@/components/CompareTable";
 import { PlatformFilter } from "@/components/PlatformFilter";
 import { MarkRead } from "@/components/MarkRead";
 import { Quiz } from "@/components/Quiz";
+import { Diagram } from "@/components/diagrams";
 import { ALL_CHAPTERS } from "@/content/outline";
 import { CHAPTERS } from "@/content/chapters";
 import type { Chapter, OutlineChapter } from "@/content/types";
@@ -142,6 +143,11 @@ async function ChapterBody({ meta, chapter }: { meta: OutlineChapter; chapter: C
                     </p>
                   ))}
                 </div>
+                {s.diagram ? (
+                  <div className="mt-6">
+                    <Diagram id={s.diagram} />
+                  </div>
+                ) : null}
                 {s.compare ? (
                   <div className="mt-6">
                     <CompareTable rows={s.compare} />
