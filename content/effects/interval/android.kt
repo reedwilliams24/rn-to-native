@@ -1,14 +1,14 @@
 @Composable
-fun Elapsed() {
-    var seconds by remember { mutableIntStateOf(0) }
+fun Elapsed() { // @link:fn
+    var seconds by remember { mutableIntStateOf(0) } // @link:state
 
     // Unit never changes, so this runs once, like useEffect(fn, [])
-    LaunchedEffect(Unit) {
-        while (true) {
-            delay(1_000) // suspends; doesn't block the main thread
-            seconds++
+    LaunchedEffect(Unit) { // @link:effect
+        while (true) { // @link:loop
+            delay(1_000) // suspends; doesn't block the main thread // @link:tick
+            seconds++ // @link:tick
         }
-    } // no cleanup needed: the coroutine is cancelled when Elapsed leaves
+    } // no cleanup needed: the coroutine is cancelled when Elapsed leaves // @link:cleanup
 
-    Text("${seconds}s")
+    Text("${seconds}s") // @link:text
 }

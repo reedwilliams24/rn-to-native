@@ -1,16 +1,16 @@
-enum Route: Hashable {
-    case detail(id: UUID)
-    case settings
+enum Route: Hashable { // @link:routes
+    case detail(id: UUID) // @link:routes
+    case settings // @link:routes
 }
 
 // You own the back stack: it's just an array
-@Observable final class Router {
-    var path: [Route] = []
+@Observable final class Router { // @link:nav
+    var path: [Route] = [] // @link:nav
 
-    func openDetail(_ id: UUID) { path.append(.detail(id: id)) }
-    func openSettings() { path.append(.settings) }
-    func goBack() { path.removeLast() }
-    func popToRoot() { path.removeAll() }
+    func openDetail(_ id: UUID) { path.append(.detail(id: id)) } // @link:detail
+    func openSettings() { path.append(.settings) } // @link:settings
+    func goBack() { path.removeLast() } // @link:back
+    func popToRoot() { path.removeAll() } // @link:root
 }
 
 struct RootView: View {

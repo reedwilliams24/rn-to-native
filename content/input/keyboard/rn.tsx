@@ -1,17 +1,17 @@
-type Props = { email: string; onChangeEmail: (v: string) => void; onSubmit: () => void };
+type Props = { email: string; onChangeEmail: (v: string) => void; onSubmit: () => void }; // @link:props
 
-function EmailField({ email, onChangeEmail, onSubmit }: Props) {
+function EmailField({ email, onChangeEmail, onSubmit }: Props) { // @link:fn
   return (
-    <TextInput
-      value={email}
-      onChangeText={onChangeEmail}
-      placeholder="Email"
-      keyboardType="email-address"
-      autoComplete="email"
-      autoCapitalize="none"
-      autoCorrect={false}
-      returnKeyType="go"
-      onSubmitEditing={onSubmit}
+    <TextInput // @link:field
+      value={email} // @link:value
+      onChangeText={onChangeEmail} // @link:value
+      placeholder="Email" // @link:label
+      keyboardType="email-address" // @link:kbtype
+      autoComplete="email" // @link:autocomplete
+      autoCapitalize="none" // @link:caps
+      autoCorrect={false} // @link:correct
+      returnKeyType="go" // @link:return
+      onSubmitEditing={onSubmit} // @link:submit
     />
   );
 }

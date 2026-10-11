@@ -1,22 +1,22 @@
-fun greet(name: String, greeting: String = "Hello"): String {
-    return "$greeting, $name!"
+fun greet(name: String, greeting: String = "Hello"): String { // @link:greet
+    return "$greeting, $name!" // @link:body
 }
 
 // Expression body: return type inferred
-fun shout(s: String) = s.uppercase()
+fun shout(s: String) = s.uppercase() // @link:shout
 
 // Named arguments replace the options object
-fun send(
-    message: String,
-    to: String,
-    silent: Boolean = false,
+fun send( // @link:send
+    message: String, // @link:msg
+    to: String, // @link:to
+    silent: Boolean = false, // @link:silent
 ) {
-    val flag = if (silent) " (silent)" else ""
-    println("$message → $to$flag")
+    val flag = if (silent) " (silent)" else "" // @link:flag
+    println("$message → $to$flag") // @link:print
 }
 
 fun main() {
-    greet("Reed")
-    greet("Reed", greeting = "Hi")
-    send("Lunch?", to = "Sam", silent = true)
+    greet("Reed") // @link:call1
+    greet("Reed", greeting = "Hi") // @link:call2
+    send("Lunch?", to = "Sam", silent = true) // @link:call3
 }

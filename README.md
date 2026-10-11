@@ -47,4 +47,4 @@ var count by remember { mutableStateOf(0) } // @link:state
 - Give one line several ids with commas (`// @link:fn,props`). Lines match when they share any id.
 - An id has to appear in at least two of the three files, or the build fails. This catches typos.
 - Markers are removed before Shiki highlights the code, so they never show up on the site. Because they're ordinary comments, the `.kt` and `.swift` files still compile.
-- Snippets without markers render exactly as before. `content/components/` is fully annotated and works as a reference.
+- Snippets without markers render exactly as before. Every snippet with a cross-platform equivalent is annotated (`content/components/` is a good reference). Leave lines with no counterpart, such as platform-only setup, unlinked.

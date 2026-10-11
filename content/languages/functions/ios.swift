@@ -1,20 +1,20 @@
 // One expression: implicit return
-func greet(_ name: String, greeting: String = "Hello") -> String {
-    "\(greeting), \(name)!"
+func greet(_ name: String, greeting: String = "Hello") -> String { // @link:greet
+    "\(greeting), \(name)!" // @link:body
 }
 
-func shout(_ s: String) -> String { s.uppercased() }
+func shout(_ s: String) -> String { s.uppercased() } // @link:shout
 
 // Argument label `to`, parameter name `recipient`
-func send(
-    _ message: String,
-    to recipient: String,
-    silent: Bool = false
+func send( // @link:send
+    _ message: String, // @link:msg
+    to recipient: String, // @link:to
+    silent: Bool = false // @link:silent
 ) {
-    let flag = silent ? " (silent)" : ""
-    print("\(message) → \(recipient)\(flag)")
+    let flag = silent ? " (silent)" : "" // @link:flag
+    print("\(message) → \(recipient)\(flag)") // @link:print
 }
 
-greet("Reed")
-greet("Reed", greeting: "Hi")
-send("Lunch?", to: "Sam", silent: true)
+greet("Reed") // @link:call1
+greet("Reed", greeting: "Hi") // @link:call2
+send("Lunch?", to: "Sam", silent: true) // @link:call3

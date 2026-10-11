@@ -1,12 +1,12 @@
 import { activateKeepAwakeAsync, deactivateKeepAwake } from 'expo-keep-awake';
 
-function RecipeScreen() {
-  useEffect(() => {
-    activateKeepAwakeAsync();
-    return () => {
-      deactivateKeepAwake();
+function RecipeScreen() { // @link:fn
+  useEffect(() => { // @link:effect
+    activateKeepAwakeAsync(); // @link:on
+    return () => { // @link:cleanup
+      deactivateKeepAwake(); // @link:off
     };
   }, []);
 
-  return <RecipeSteps />;
+  return <RecipeSteps />; // @link:content
 }

@@ -1,12 +1,12 @@
 // iOS has no in-app update API. Compare versions yourself and link to the store.
 @MainActor @Observable
-final class UpdateGate {
+final class UpdateGate { // @link:gate
     var isUpdateRequired = false
 
-    // minimumVersion comes from your remote config / API, e.g. "1.4.0"
-    func check(minimumVersion: String) {
-        let current = Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String ?? "0"
-        isUpdateRequired = current.compare(minimumVersion, options: .numeric) == .orderedAscending
+    // minimumVersion comes from your remote config / API, e.g. "1.4.0" // @link:remote
+    func check(minimumVersion: String) { // @link:check
+        let current = Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String ?? "0" // @link:compare
+        isUpdateRequired = current.compare(minimumVersion, options: .numeric) == .orderedAscending // @link:compare
     }
 }
 

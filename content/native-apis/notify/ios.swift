@@ -1,17 +1,17 @@
-func remindLater(_ title: String) async throws {
-    let center = UNUserNotificationCenter.current()
-    guard try await center.requestAuthorization(options: [.alert, .sound, .badge]) else {
+func remindLater(_ title: String) async throws { // @link:fn
+    let center = UNUserNotificationCenter.current() // @link:import
+    guard try await center.requestAuthorization(options: [.alert, .sound, .badge]) else { // @link:ask,check
         return
     }
 
-    let content = UNMutableNotificationContent()
-    content.title = "Reminder"
-    content.body = title
+    let content = UNMutableNotificationContent() // @link:content
+    content.title = "Reminder" // @link:content
+    content.body = title // @link:content
     content.sound = .default
 
-    let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 60 * 60, repeats: false)
+    let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 60 * 60, repeats: false) // @link:trigger
     let request = UNNotificationRequest(
         identifier: UUID().uuidString, content: content, trigger: trigger
     )
-    try await center.add(request)
+    try await center.add(request) // @link:schedule
 }

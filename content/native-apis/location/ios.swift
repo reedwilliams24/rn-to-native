@@ -1,15 +1,15 @@
-// Info.plist: NSLocationWhenInUseUsageDescription
+// Info.plist: NSLocationWhenInUseUsageDescription // @link:manifest
 @Observable @MainActor
 final class LocationModel {
     var coordinate: CLLocationCoordinate2D?
-    @ObservationIgnored private let manager = CLLocationManager()
+    @ObservationIgnored private let manager = CLLocationManager() // @link:import
 
-    func locateOnce() async {
-        manager.requestWhenInUseAuthorization()
+    func locateOnce() async { // @link:fn
+        manager.requestWhenInUseAuthorization() // @link:ask
         do {
-            for try await update in CLLocationUpdate.liveUpdates() {
+            for try await update in CLLocationUpdate.liveUpdates() { // @link:fetch
                 if let location = update.location {
-                    coordinate = location.coordinate
+                    coordinate = location.coordinate // @link:result
                     break // stop updates after the first fix
                 }
             }

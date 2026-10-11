@@ -1,18 +1,18 @@
-struct DraggableCard: View {
-    @State private var offset = CGSize.zero
+struct DraggableCard: View { // @link:fn
+    @State private var offset = CGSize.zero // @link:offset
 
     var body: some View {
-        RoundedRectangle(cornerRadius: 16)
+        RoundedRectangle(cornerRadius: 16) // @link:card
             .fill(.tint)
             .frame(width: 120, height: 120)
-            .offset(offset)
-            .gesture(
-                DragGesture()
-                    .onChanged { value in
-                        offset = value.translation
+            .offset(offset) // @link:apply
+            .gesture( // @link:gesture
+                DragGesture() // @link:gesture
+                    .onChanged { value in // @link:update
+                        offset = value.translation // @link:update
                     }
-                    .onEnded { _ in
-                        withAnimation(.spring) { offset = .zero }
+                    .onEnded { _ in // @link:end
+                        withAnimation(.spring) { offset = .zero } // @link:end
                     }
             )
     }

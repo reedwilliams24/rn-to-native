@@ -1,13 +1,13 @@
-struct TodoList: View {
-    let todos: [Todo] // Todo: Identifiable
+struct TodoList: View { // @link:fn
+    let todos: [Todo] // Todo: Identifiable // @link:fn,key
 
     var body: some View {
-        List(todos) { todo in
-            TodoRow(todo: todo) // separators are drawn for you
+        List(todos) { todo in // @link:list,items
+            TodoRow(todo: todo) // separators are drawn for you // @link:row,sep
         }
-        .overlay {
-            if todos.isEmpty {
-                ContentUnavailableView("Nothing to do", systemImage: "checkmark.circle")
+        .overlay { // @link:empty
+            if todos.isEmpty { // @link:empty
+                ContentUnavailableView("Nothing to do", systemImage: "checkmark.circle") // @link:empty
             }
         }
     }

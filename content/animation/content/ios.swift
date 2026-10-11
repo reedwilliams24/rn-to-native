@@ -1,9 +1,9 @@
-struct RemainingCount: View {
+struct RemainingCount: View { // @link:fn
     let count: Int
 
     var body: some View {
-        Text("\(count) left")
-            .contentTransition(.numericText(value: Double(count)))
-            .animation(.snappy, value: count)
+        Text("\(count) left") // @link:text
+            .contentTransition(.numericText(value: Double(count))) // @link:transition
+            .animation(.snappy, value: count) // @link:transition
     }
 }

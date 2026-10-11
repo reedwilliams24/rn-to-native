@@ -1,10 +1,10 @@
-function ConnectionStatus() {
-  const [online, setOnline] = useState(true);
+function ConnectionStatus() { // @link:fn
+  const [online, setOnline] = useState(true); // @link:state
 
-  useEffect(() => {
-    const unsubscribe = NetInfo.addEventListener((s) => setOnline(!!s.isConnected));
-    return unsubscribe;
+  useEffect(() => { // @link:subscribe
+    const unsubscribe = NetInfo.addEventListener((s) => setOnline(!!s.isConnected)); // @link:register,emit
+    return unsubscribe; // @link:cleanup
   }, []);
 
-  return <Text>{online ? 'Online' : 'Offline'}</Text>;
+  return <Text>{online ? 'Online' : 'Offline'}</Text>; // @link:text
 }

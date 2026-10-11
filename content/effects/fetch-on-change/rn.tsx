@@ -1,15 +1,15 @@
-function Profile({ userId }: { userId: string }) {
-  const [user, setUser] = useState<User | null>(null);
+function Profile({ userId }: { userId: string }) { // @link:fn
+  const [user, setUser] = useState<User | null>(null); // @link:state
 
-  useEffect(() => {
-    let cancelled = false;
-    fetchUser(userId).then((u) => {
-      if (!cancelled) setUser(u);
+  useEffect(() => { // @link:effect
+    let cancelled = false; // @link:cancel
+    fetchUser(userId).then((u) => { // @link:fetch
+      if (!cancelled) setUser(u); // @link:assign
     });
     return () => {
-      cancelled = true; // ignore the stale response
+      cancelled = true; // ignore the stale response // @link:cancel
     };
-  }, [userId]);
+  }, [userId]); // @link:effect
 
-  return user ? <Text>{user.name}</Text> : <ActivityIndicator />;
+  return user ? <Text>{user.name}</Text> : <ActivityIndicator />; // @link:render,loading
 }

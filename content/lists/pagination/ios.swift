@@ -1,20 +1,20 @@
-struct InfiniteList: View {
-    let todos: [Todo]
-    let loading: Bool
-    let loadMore: () -> Void
+struct InfiniteList: View { // @link:fn
+    let todos: [Todo] // @link:props
+    let loading: Bool // @link:props
+    let loadMore: () -> Void // @link:props
 
     var body: some View {
-        List {
-            ForEach(todos) { todo in
-                TodoRow(todo: todo)
+        List { // @link:list
+            ForEach(todos) { todo in // @link:items
+                TodoRow(todo: todo) // @link:row
             }
-            if loading {
-                ProgressView()
+            if loading { // @link:footer
+                ProgressView() // @link:footer
             } else {
                 // A sentinel row. When it scrolls into view, ask for more.
-                Color.clear
+                Color.clear // @link:threshold
                     .frame(height: 1)
-                    .onAppear(perform: loadMore)
+                    .onAppear(perform: loadMore) // @link:trigger
             }
         }
     }

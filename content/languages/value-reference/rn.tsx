@@ -1,9 +1,9 @@
-// Every object is a reference
-const a = { count: 0 };
-const b = a;
-b.count += 1;
-console.log(a.count); // 1: same object
+// Every object is a reference // @link:ref
+const a = { count: 0 }; // @link:a
+const b = a; // @link:b
+b.count += 1; // @link:mut
+console.log(a.count); // 1: same object // @link:print
 
-const t1 = { title: 'Buy milk', done: false };
-const t2 = { ...t1, done: true }; // copy by convention
-console.log(t1.done); // false
+const t1 = { title: 'Buy milk', done: false }; // @link:t1
+const t2 = { ...t1, done: true }; // copy by convention // @link:t2
+console.log(t1.done); // false // @link:print2

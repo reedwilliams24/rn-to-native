@@ -1,15 +1,15 @@
 @Composable
-fun TitleRow(title: String, onEdit: () -> Unit) {
-    Row(
-        modifier = Modifier.fillMaxWidth(),
+fun TitleRow(title: String, onEdit: () -> Unit) { // @link:fn
+    Row( // @link:row
+        modifier = Modifier.fillMaxWidth(), // @link:row
         verticalAlignment = Alignment.CenterVertically,
     ) {
-        Text(
-            text = title,
-            modifier = Modifier.weight(1f), // flex: 1
-            maxLines = 1,
-            overflow = TextOverflow.Ellipsis,
+        Text( // @link:text
+            text = title, // @link:text
+            modifier = Modifier.weight(1f), // flex: 1 // @link:flex
+            maxLines = 1, // @link:lines
+            overflow = TextOverflow.Ellipsis, // @link:lines
         )
-        TextButton(onClick = onEdit) { Text("Edit") }
+        TextButton(onClick = onEdit) { Text("Edit") } // @link:edit
     }
 }

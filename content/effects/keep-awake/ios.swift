@@ -1,7 +1,7 @@
-struct RecipeScreen: View {
+struct RecipeScreen: View { // @link:fn
     var body: some View {
-        RecipeSteps()
-            .onAppear { UIApplication.shared.isIdleTimerDisabled = true }
-            .onDisappear { UIApplication.shared.isIdleTimerDisabled = false }
+        RecipeSteps() // @link:content
+            .onAppear { UIApplication.shared.isIdleTimerDisabled = true } // @link:effect,on
+            .onDisappear { UIApplication.shared.isIdleTimerDisabled = false } // @link:cleanup,off
     }
 }

@@ -1,22 +1,22 @@
-struct TodoGroup: Identifiable {
+struct TodoGroup: Identifiable { // @link:type
     let title: String
     let todos: [Todo]
     var id: String { title }
 }
 
-struct TodoSections: View {
+struct TodoSections: View { // @link:fn
     let groups: [TodoGroup]
 
     var body: some View {
-        List {
-            ForEach(groups) { group in
-                Section(group.title) {
-                    ForEach(group.todos) { todo in
-                        TodoRow(todo: todo)
+        List { // @link:list
+            ForEach(groups) { group in // @link:groups
+                Section(group.title) { // @link:header
+                    ForEach(group.todos) { todo in // @link:items
+                        TodoRow(todo: todo) // @link:items
                     }
                 }
             }
         }
-        .listStyle(.plain) // plain lists pin section headers while scrolling
+        .listStyle(.plain) // plain lists pin section headers while scrolling // @link:sticky
     }
 }

@@ -1,8 +1,8 @@
 @Composable
-fun RemainingCount(count: Int) {
-    AnimatedContent(
+fun RemainingCount(count: Int) { // @link:fn
+    AnimatedContent( // @link:transition
         targetState = count,
-        transitionSpec = {
+        transitionSpec = { // @link:transition
             // Slide up when the count grows, down when it shrinks
             val direction = if (targetState > initialState) 1 else -1
             (slideInVertically { it * direction } + fadeIn())
@@ -10,6 +10,6 @@ fun RemainingCount(count: Int) {
         },
         label = "count",
     ) { value ->
-        Text("$value left")
+        Text("$value left") // @link:text
     }
 }

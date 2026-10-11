@@ -1,11 +1,11 @@
-// modules/native-settings/android/.../NativeSettingsModule.kt (Expo Modules API)
+// modules/native-settings/android/.../NativeSettingsModule.kt (Expo Modules API) // @link:file
 class NativeSettingsModule : Module() {
     override fun definition() = ModuleDefinition {
-        Name("NativeSettings")
+        Name("NativeSettings") // @link:name
 
-        AsyncFunction("open") {
+        AsyncFunction("open") { // @link:open
             val activity = appContext.currentActivity ?: return@AsyncFunction
-            activity.startActivity(Intent(activity, SettingsActivity::class.java))
+            activity.startActivity(Intent(activity, SettingsActivity::class.java)) // @link:present
         }.runOnQueue(Queues.MAIN)
     }
 }
@@ -16,7 +16,7 @@ class SettingsActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            MaterialTheme { SettingsScreen(onDone = ::finish) }
+            MaterialTheme { SettingsScreen(onDone = ::finish) } // @link:screen
         }
     }
 }

@@ -1,11 +1,11 @@
-import * as Location from 'expo-location';
+import * as Location from 'expo-location'; // @link:import
 
-async function currentCoords() {
-  const { granted } = await Location.requestForegroundPermissionsAsync();
-  if (!granted) return null;
+async function currentCoords() { // @link:fn
+  const { granted } = await Location.requestForegroundPermissionsAsync(); // @link:ask
+  if (!granted) return null; // @link:check
 
-  const position = await Location.getCurrentPositionAsync({
-    accuracy: Location.Accuracy.Balanced,
+  const position = await Location.getCurrentPositionAsync({ // @link:fetch
+    accuracy: Location.Accuracy.Balanced, // @link:accuracy
   });
-  return position.coords;
+  return position.coords; // @link:result
 }

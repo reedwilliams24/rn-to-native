@@ -1,23 +1,23 @@
-type Filter = 'all' | 'open';
-type State = { todos: Todo[]; filter: Filter };
+type Filter = 'all' | 'open'; // @link:filter
+type State = { todos: Todo[]; filter: Filter }; // @link:state
 
-type Action =
-  | { type: 'add'; title: string }
-  | { type: 'toggle'; id: string }
-  | { type: 'setFilter'; filter: Filter };
+type Action = // @link:action
+  | { type: 'add'; title: string } // @link:add
+  | { type: 'toggle'; id: string } // @link:toggle
+  | { type: 'setFilter'; filter: Filter }; // @link:setfilter
 
-function reducer(state: State, action: Action): State {
-  switch (action.type) {
-    case 'add':
-      return { ...state, todos: [...state.todos, { id: nanoid(), title: action.title, done: false }] };
-    case 'toggle':
+function reducer(state: State, action: Action): State { // @link:reduce
+  switch (action.type) { // @link:switch
+    case 'add': // @link:add-case
+      return { ...state, todos: [...state.todos, { id: nanoid(), title: action.title, done: false }] }; // @link:add-case
+    case 'toggle': // @link:toggle-case
       return {
         ...state,
-        todos: state.todos.map((t) => (t.id === action.id ? { ...t, done: !t.done } : t)),
+        todos: state.todos.map((t) => (t.id === action.id ? { ...t, done: !t.done } : t)), // @link:toggle-case
       };
-    case 'setFilter':
-      return { ...state, filter: action.filter };
+    case 'setFilter': // @link:filter-case
+      return { ...state, filter: action.filter }; // @link:filter-case
   }
 }
 
-const visible = (s: State) => (s.filter === 'open' ? s.todos.filter((t) => !t.done) : s.todos);
+const visible = (s: State) => (s.filter === 'open' ? s.todos.filter((t) => !t.done) : s.todos); // @link:visible

@@ -3,26 +3,26 @@
 fun PhotoToggle() {
     var expanded by remember { mutableStateOf(false) }
 
-    SharedTransitionLayout {
-        AnimatedContent(targetState = expanded, label = "photo") { isExpanded ->
-            val shared = Modifier.sharedElement(
-                rememberSharedContentState(key = "photo"),
+    SharedTransitionLayout { // @link:layout
+        AnimatedContent(targetState = expanded, label = "photo") { isExpanded -> // @link:layout
+            val shared = Modifier.sharedElement( // @link:tag
+                rememberSharedContentState(key = "photo"), // @link:tag
                 animatedVisibilityScope = this@AnimatedContent,
             )
             if (isExpanded) {
                 Box(
                     shared
-                        .fillMaxWidth()
-                        .aspectRatio(1f)
+                        .fillMaxWidth() // @link:large
+                        .aspectRatio(1f) // @link:large
                         .background(Color(0xFF1A56DB))
-                        .clickable { expanded = false },
+                        .clickable { expanded = false }, // @link:toggle
                 )
             } else {
                 Box(
                     shared
-                        .size(64.dp)
-                        .background(Color(0xFF1A56DB), RoundedCornerShape(12.dp))
-                        .clickable { expanded = true },
+                        .size(64.dp) // @link:small
+                        .background(Color(0xFF1A56DB), RoundedCornerShape(12.dp)) // @link:small
+                        .clickable { expanded = true }, // @link:toggle
                 )
             }
         }

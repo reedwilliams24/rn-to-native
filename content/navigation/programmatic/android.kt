@@ -1,13 +1,13 @@
-@Serializable object Home
-@Serializable data class Detail(val id: String)
-@Serializable object Settings
+@Serializable object Home // @link:routes
+@Serializable data class Detail(val id: String) // @link:routes
+@Serializable object Settings // @link:routes
 
 // The NavController owns the back stack. You send it commands.
-class Router(private val nav: NavController) {
-    fun openDetail(id: String) = nav.navigate(Detail(id))
-    fun openSettings() = nav.navigate(Settings)
-    fun goBack() = nav.popBackStack()
-    fun popToRoot() = nav.popBackStack(Home, inclusive = false)
+class Router(private val nav: NavController) { // @link:nav
+    fun openDetail(id: String) = nav.navigate(Detail(id)) // @link:detail
+    fun openSettings() = nav.navigate(Settings) // @link:settings
+    fun goBack() = nav.popBackStack() // @link:back
+    fun popToRoot() = nav.popBackStack(Home, inclusive = false) // @link:root
 }
 
 // After login: open Home and drop Login, so Back doesn't return to it

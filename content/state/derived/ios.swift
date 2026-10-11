@@ -1,15 +1,15 @@
-struct TodoSummary: View {
-    let todos: [Todo]
-    let query: String
+struct TodoSummary: View { // @link:fn
+    let todos: [Todo] // @link:props
+    let query: String // @link:props
 
     // Computed properties re-run with body. That's fine for cheap work.
-    private var visible: [Todo] {
-        query.isEmpty ? todos : todos.filter { $0.title.localizedStandardContains(query) }
+    private var visible: [Todo] { // @link:memo
+        query.isEmpty ? todos : todos.filter { $0.title.localizedStandardContains(query) } // @link:filter
     }
 
-    private var remaining: Int { todos.filter { !$0.done }.count }
+    private var remaining: Int { todos.filter { !$0.done }.count } // @link:remaining
 
-    var body: some View {
-        Text("\(visible.count) shown · \(remaining) left")
+    var body: some View { // @link:body
+        Text("\(visible.count) shown · \(remaining) left") // @link:text
     }
 }

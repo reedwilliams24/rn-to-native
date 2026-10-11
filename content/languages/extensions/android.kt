@@ -1,18 +1,18 @@
-data class Todo(
+data class Todo( // @link:type
     val title: String,
     val done: Boolean,
     val dueDate: LocalDate,
 )
 
 // Extension function on a type you don't own
-fun String.capitalized(): String =
-    replaceFirstChar { it.uppercase() }
+fun String.capitalized(): String = // @link:cap
+    replaceFirstChar { it.uppercase() } // @link:capbody
 
 // Extension property: computed, no storage
-val Todo.isOverdue: Boolean
-    get() = !done && dueDate < LocalDate.now()
+val Todo.isOverdue: Boolean // @link:overdue
+    get() = !done && dueDate < LocalDate.now() // @link:overduebody
 
 fun example(todos: List<Todo>) {
-    val label = "milk".capitalized() // "Milk"
-    val late = todos.filter { it.isOverdue }
+    val label = "milk".capitalized() // "Milk" // @link:uselabel
+    val late = todos.filter { it.isOverdue } // @link:uselate
 }

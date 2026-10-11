@@ -3,20 +3,20 @@ android {
     namespace = "com.acme.todos"
 
     defaultConfig {
-        applicationId = "com.acme.todos"
-        versionCode = 42
-        versionName = "1.4.0"
+        applicationId = "com.acme.todos" // @link:bundle-id
+        versionCode = 42 // @link:build
+        versionName = "1.4.0" // @link:version
     }
 
     buildFeatures { buildConfig = true }
 
     flavorDimensions += "environment"
-    productFlavors {
-        create("staging") {
+    productFlavors { // @link:variant
+        create("staging") { // @link:variant
             dimension = "environment"
-            applicationIdSuffix = ".staging"
-            resValue("string", "app_name", "Todos (staging)")
-            buildConfigField("String", "API_URL", "\"https://staging.api.acme.com\"")
+            applicationIdSuffix = ".staging" // @link:bundle-id
+            resValue("string", "app_name", "Todos (staging)") // @link:name
+            buildConfigField("String", "API_URL", "\"https://staging.api.acme.com\"") // @link:api
         }
         create("production") {
             dimension = "environment"
@@ -33,4 +33,4 @@ android {
     }
 }
 
-// Read it at runtime (generated per variant): BuildConfig.API_URL, BuildConfig.DEBUG
+// Read it at runtime (generated per variant): BuildConfig.API_URL, BuildConfig.DEBUG // @link:read

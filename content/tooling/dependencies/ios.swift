@@ -1,5 +1,5 @@
 // swift-tools-version: 5.10
-// Package.swift for a local package. For the app
+// Package.swift for a local package. For the app // @link:file
 // target, use File → Add Package Dependencies…
 import PackageDescription
 
@@ -12,9 +12,9 @@ let package = Package(
             targets: ["TodoFeature"]
         ),
     ],
-    dependencies: [
+    dependencies: [ // @link:deps
         .package(
-            url: "https://github.com/kean/Nuke",
+            url: "https://github.com/kean/Nuke", // @link:lib
             from: "12.0.0"
         ),
     ],
@@ -22,7 +22,7 @@ let package = Package(
         .target(
             name: "TodoFeature",
             dependencies: [
-                .product(name: "NukeUI", package: "Nuke"),
+                .product(name: "NukeUI", package: "Nuke"), // @link:lib
             ]
         ),
     ]

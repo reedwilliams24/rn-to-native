@@ -4,20 +4,20 @@
 //     <action android:name="com.google.firebase.MESSAGING_EVENT" />
 //   </intent-filter>
 // </service>
-class PushService : FirebaseMessagingService() {
+class PushService : FirebaseMessagingService() { // @link:import
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
 
-    override fun onNewToken(token: String) {
-        scope.launch { api.registerDevice(token) }
+    override fun onNewToken(token: String) { // @link:refresh,token
+        scope.launch { api.registerDevice(token) } // @link:send
     }
 
     // Called for data messages, and for notification messages while in the foreground
-    override fun onMessageReceived(message: RemoteMessage) {
+    override fun onMessageReceived(message: RemoteMessage) { // @link:message
         val title = message.notification?.title ?: message.data["title"] ?: return
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS) ==
             PackageManager.PERMISSION_GRANTED
         ) {
-            showReminder(this, title.hashCode(), title)
+            showReminder(this, title.hashCode(), title) // @link:message
         }
     }
 

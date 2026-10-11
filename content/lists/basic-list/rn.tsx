@@ -1,11 +1,11 @@
-function TodoList({ todos }: { todos: Todo[] }) {
+function TodoList({ todos }: { todos: Todo[] }) { // @link:fn
   return (
-    <FlatList
-      data={todos}
-      keyExtractor={(t) => t.id}
-      renderItem={({ item }) => <TodoRow todo={item} />}
-      ItemSeparatorComponent={Divider}
-      ListEmptyComponent={<Text>Nothing to do</Text>}
+    <FlatList // @link:list
+      data={todos} // @link:list,items
+      keyExtractor={(t) => t.id} // @link:key
+      renderItem={({ item }) => <TodoRow todo={item} />} // @link:row
+      ItemSeparatorComponent={Divider} // @link:sep
+      ListEmptyComponent={<Text>Nothing to do</Text>} // @link:empty
     />
   );
 }

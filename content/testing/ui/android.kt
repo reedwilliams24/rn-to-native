@@ -1,25 +1,25 @@
-class TodoRowTest {
+class TodoRowTest { // @link:suite
     @get:Rule
-    val composeRule = createComposeRule()
+    val composeRule = createComposeRule() // @link:lib
 
     @Test
-    fun tappingTheRowTogglesIt() {
-        var toggles = 0
+    fun tappingTheRowTogglesIt() { // @link:tap-test
+        var toggles = 0 // @link:counter
         composeRule.setContent {
-            TodoRow(title = "Buy milk", done = false, onToggle = { toggles++ })
+            TodoRow(title = "Buy milk", done = false, onToggle = { toggles++ }) // @link:render
         }
 
-        composeRule.onNodeWithText("Buy milk").performClick()
+        composeRule.onNodeWithText("Buy milk").performClick() // @link:tap
 
-        assertEquals(1, toggles)
+        assertEquals(1, toggles) // @link:assert
     }
 
     @Test
-    fun aDoneRowIsChecked() {
+    fun aDoneRowIsChecked() { // @link:done-test
         composeRule.setContent {
-            TodoRow(title = "Buy milk", done = true, onToggle = {})
+            TodoRow(title = "Buy milk", done = true, onToggle = {}) // @link:done-render
         }
 
-        composeRule.onNode(isToggleable()).assertIsOn()
+        composeRule.onNode(isToggleable()).assertIsOn() // @link:done-assert
     }
 }

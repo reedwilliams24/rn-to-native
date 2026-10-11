@@ -1,6 +1,6 @@
-enum class Tab(val label: String, val icon: ImageVector) {
-    Todos("Todos", Icons.Filled.Home),
-    Settings("Settings", Icons.Filled.Settings),
+enum class Tab(val label: String, val icon: ImageVector) { // @link:tabdef
+    Todos("Todos", Icons.Filled.Home), // @link:todos,todos-icon
+    Settings("Settings", Icons.Filled.Settings), // @link:settings,settings-icon
 }
 
 @Composable
@@ -9,9 +9,9 @@ fun Tabs() {
 
     Scaffold(
         bottomBar = {
-            NavigationBar {
+            NavigationBar { // @link:bar
                 Tab.entries.forEach { tab ->
-                    NavigationBarItem(
+                    NavigationBarItem( // @link:bar
                         selected = tab == selected,
                         onClick = { selected = tab },
                         icon = { Icon(tab.icon, contentDescription = null) },
@@ -22,8 +22,8 @@ fun Tabs() {
         },
     ) { innerPadding ->
         when (selected) {
-            Tab.Todos -> TodosScreen(Modifier.padding(innerPadding))
-            Tab.Settings -> SettingsScreen(Modifier.padding(innerPadding))
+            Tab.Todos -> TodosScreen(Modifier.padding(innerPadding)) // @link:todos-screen
+            Tab.Settings -> SettingsScreen(Modifier.padding(innerPadding)) // @link:settings-screen
         }
     }
 }

@@ -9,9 +9,9 @@ export async function applyOtaUpdate() {
   await Updates.reloadAsync();
 }
 
-// What you'll need instead: a minimum-version gate from remote config
+// What you'll need instead: a minimum-version gate from remote config // @link:gate
 import * as Application from 'expo-application';
 
-export function isUpdateRequired(minimumBuild: number) {
-  return Number(Application.nativeBuildVersion) < minimumBuild;
+export function isUpdateRequired(minimumBuild: number) { // @link:check
+  return Number(Application.nativeBuildVersion) < minimumBuild; // @link:compare
 }

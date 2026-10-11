@@ -4,7 +4,7 @@ import ReactAppDependencyProvider
 import SwiftUI
 
 final class ReactNativeDelegate: RCTDefaultReactNativeFactoryDelegate {
-    override func bundleURL() -> URL? {
+    override func bundleURL() -> URL? { // @link:bundle
         #if DEBUG
         RCTBundleURLProvider.sharedSettings().jsBundleURL(forBundleRoot: "index")
         #else
@@ -27,11 +27,11 @@ final class ReactHost {
 }
 
 // Drop any registered RN screen into SwiftUI
-struct ReactScreen: UIViewRepresentable {
+struct ReactScreen: UIViewRepresentable { // @link:host
     let moduleName: String
 
     func makeUIView(context: Context) -> UIView {
-        ReactHost.shared.factory.rootViewFactory.view(withModuleName: moduleName)
+        ReactHost.shared.factory.rootViewFactory.view(withModuleName: moduleName) // @link:orders,host
     }
 
     func updateUIView(_ uiView: UIView, context: Context) {}
