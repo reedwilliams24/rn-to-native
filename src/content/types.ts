@@ -19,13 +19,31 @@ export type Section = {
   callout?: string;
 };
 
-export type QuizQuestion = {
-  question: string;
+type QuizBase = { question: string; explanation: string };
+
+/** A code block shown with a question, highlighted at build time. */
+export type QuizCode = { platform: Platform; code: string };
+
+export type ChoiceQuestion = QuizBase & {
+  kind?: "choice";
   options: string[];
   /** Index into options */
   answer: number;
-  explanation: string;
 };
+
+/** Predict the output or behavior of a snippet. */
+export type PredictQuestion = QuizBase & QuizCode & { kind: "predict"; options: string[]; answer: number };
+
+/** Click the faulty line. `answer` is the 1-based line number in `code`. */
+export type BugQuestion = QuizBase & QuizCode & { kind: "bug"; answer: number };
+
+/** Put `items` in order. `items` is the correct order; the quiz shuffles them. */
+export type OrderQuestion = QuizBase & { kind: "order"; items: string[] };
+
+export type QuizQuestion = ChoiceQuestion | PredictQuestion | BugQuestion | OrderQuestion;
+
+/** A saved answer: an option index, a line number (bug), or an ordering of item indices (order). */
+export type QuizAnswer = number | number[] | null;
 
 export type Chapter = {
   slug: string;
