@@ -23,6 +23,49 @@ body {
   display: none;
 }
 
+.linkable .code pre {
+  padding-left: 0;
+  padding-right: 0;
+}
+
+.linkable .code code {
+  display: grid;
+  width: max-content;
+  min-width: 100%;
+}
+
+.linkable .code .line {
+  min-height: 1lh;
+  padding: 0 16px;
+}
+
+.linkable .code .line[data-link] {
+  cursor: pointer;
+}
+
+.linkable .code .line[data-link]:focus-visible {
+  outline: 1px solid #58a6ff;
+  outline-offset: -1px;
+}
+
+.linkable [data-platform] .line.link-active {
+  --link: 56 189 248;
+  background: rgb(var(--link) / 0.16);
+  box-shadow: inset 3px 0 rgb(var(--link));
+}
+
+.linkable [data-platform="android"] .line.link-active {
+  --link: 16 185 129;
+}
+
+.linkable [data-platform="ios"] .line.link-active {
+  --link: 249 115 22;
+}
+
+.linkable.link-pinned [data-platform] .line.link-active {
+  background: rgb(var(--link) / 0.26);
+}
+
 @keyframes search-hit {
   from {
     background-color: #fef3c7;

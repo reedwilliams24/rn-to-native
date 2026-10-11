@@ -1,7 +1,7 @@
-#Preview("Open") {
-    TodoRow(title: "Buy milk", done: false, onToggle: {})
+#Preview("Open") { // @link:open
+    TodoRow(title: "Buy milk", done: false, onToggle: {}) // @link:open-args
 }
 
-#Preview("Done") {
-    TodoRow(title: "Buy milk", done: true, onToggle: {})
+#Preview("Done") { // @link:done
+    TodoRow(title: "Buy milk", done: true, onToggle: {}) // @link:done-args
 }

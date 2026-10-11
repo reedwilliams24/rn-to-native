@@ -1,9 +1,9 @@
-import { Text, View } from 'react-native';
+import { Text, View } from 'react-native'; // @link:import
 
-export function Greeting() {
-  return (
-    <View>
-      <Text>Hello, native!</Text>
+export function Greeting() { // @link:fn
+  return ( // @link:body
+    <View>{/* @link:column */}
+      <Text>Hello, native!</Text>{/* @link:text */}
     </View>
   );
 }

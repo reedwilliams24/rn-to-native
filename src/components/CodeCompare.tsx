@@ -1,5 +1,6 @@
 import { PLATFORMS, type PerPlatform } from "@/content/types";
 import { Inline } from "@/lib/inline";
+import { LinkedLines } from "./LinkedLines";
 import { PLATFORM_STYLE } from "./platform";
 
 export function CodeCompare({
@@ -9,7 +10,7 @@ export function CodeCompare({
   html: PerPlatform<string>;
   notes?: Partial<PerPlatform<string[]>>;
 }) {
-  return (
+  const columns = (
     <div className="flex flex-col gap-4 xl:flex-row">
       {PLATFORMS.map((p) => (
         <div key={p.id} data-platform={p.id} className="flex min-w-0 flex-1 flex-col">
@@ -37,5 +38,12 @@ export function CodeCompare({
         </div>
       ))}
     </div>
+  );
+  if (!PLATFORMS.some((p) => html[p.id].includes("data-link="))) return columns;
+  return (
+    <LinkedLines>
+      <p className="mb-2 text-xs text-zinc-500">Hover, focus, or tap a line to highlight its equivalent in the other languages.</p>
+      {columns}
+    </LinkedLines>
   );
 }

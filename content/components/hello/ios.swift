@@ -1,9 +1,9 @@
-import SwiftUI
+import SwiftUI // @link:import
 
-struct Greeting: View {
-    var body: some View {
-        VStack {
-            Text("Hello, native!")
+struct Greeting: View { // @link:fn
+    var body: some View { // @link:body
+        VStack { // @link:column
+            Text("Hello, native!") // @link:text
         }
     }
 }

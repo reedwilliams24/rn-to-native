@@ -1,10 +1,10 @@
-enum class Priority { Low, Medium, High }
+enum class Priority { Low, Medium, High } // @link:enum
 
-@Composable
-fun PriorityBadge(priority: Priority) {
-    when (priority) {
-        Priority.High -> Text("High", color = Color.Red)
-        Priority.Medium -> Text("Medium", color = Color(0xFFFFA500))
-        Priority.Low -> Text("Low", color = Color.Gray)
+@Composable // @link:fn
+fun PriorityBadge(priority: Priority) { // @link:fn,param
+    when (priority) { // @link:switch
+        Priority.High -> Text("High", color = Color.Red) // @link:high
+        Priority.Medium -> Text("Medium", color = Color(0xFFFFA500)) // @link:medium
+        Priority.Low -> Text("Low", color = Color.Gray) // @link:low
     }
 }

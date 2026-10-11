@@ -1,10 +1,10 @@
-import androidx.compose.foundation.layout.Column
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
+import androidx.compose.foundation.layout.Column // @link:import
+import androidx.compose.material3.Text // @link:import
+import androidx.compose.runtime.Composable // @link:import
 
-@Composable
-fun Greeting() {
-    Column {
-        Text("Hello, native!")
+@Composable // @link:fn
+fun Greeting() { // @link:fn
+    Column { // @link:column
+        Text("Hello, native!") // @link:text
     }
 }
