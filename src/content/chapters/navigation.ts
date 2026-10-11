@@ -323,6 +323,32 @@ export const navigation: Chapter = {
     { rn: "`linking` config", android: "`deepLinks = listOf(navDeepLink<…>(…))`", ios: "`.onOpenURL { }`" },
     { rn: "`BackHandler` / `beforeRemove`", android: "`BackHandler(enabled) { }`", ios: "Custom back button" },
   ],
+  exercises: [
+    {
+      id: "open-message",
+      title: "Push a message screen, then go back",
+      prompt: "Navigate to a detail route with a param, read the param on the new screen, then pop back.",
+      blanks: {
+        android: [
+          { hint: "Creates the back stack holder and keeps it across recompositions." },
+          {
+            hint: "Push a route. With type-safe routes you pass an instance of the route class, params included.",
+            accept: ['navigate(route = Message("a"))', 'navigate(Message(id = "a"))'],
+          },
+          { hint: "The destination's route type, passed as a generic type argument (like `Stack.Screen name=…`)." },
+          { hint: "Decodes the back stack entry's arguments into the route object: your `route.params`.", accept: ["toRoute<Message>()"] },
+          { hint: "Removes the top destination from the stack, like `navigation.goBack()`.", accept: ["navigateUp()"] },
+        ],
+        ios: [
+          { hint: "The container that owns the push/pop stack, like `Stack.Navigator`." },
+          { hint: "A button that pushes a value onto the stack when tapped." },
+          { hint: "Maps a pushed value's type to the screen it shows, like registering a `Stack.Screen`." },
+          { hint: "Read the dismiss action from the environment with a property wrapper and the `\\.dismiss` key path." },
+          { hint: "The dismiss action is callable. Call it like a function to pop this screen.", accept: ["self.dismiss()"] },
+        ],
+      },
+    },
+  ],
   quiz: [
     {
       question: "In Navigation Compose, what is a type-safe route?",
