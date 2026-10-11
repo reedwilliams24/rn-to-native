@@ -45,6 +45,23 @@ export type QuizQuestion = ChoiceQuestion | PredictQuestion | BugQuestion | Orde
 /** A saved answer: an option index, a line number (bug), or an ordering of item indices (order). */
 export type QuizAnswer = number | number[] | null;
 
+export type ExercisePlatform = "android" | "ios";
+
+export type ExerciseBlank = {
+  hint: string;
+  /** Accepted besides the solution text between the markers. Compared whitespace-insensitively. */
+  accept?: string[];
+};
+
+export type Exercise = {
+  /** Folder under content/<chapter>/exercises/ with rn.tsx, android.kt, ios.swift. Blanks in the native files are wrapped in block-comment markers: /*[*\/ answer /*]*\/ */
+  id: string;
+  title: string;
+  prompt: string;
+  /** One entry per marker, in file order */
+  blanks: Record<ExercisePlatform, ExerciseBlank[]>;
+};
+
 export type Chapter = {
   slug: string;
   title: string;
@@ -53,6 +70,7 @@ export type Chapter = {
   gotchas: { title: string; body: string }[];
   cheatsheet: PerPlatform<string>[];
   quiz: QuizQuestion[];
+  exercises?: Exercise[];
 };
 
 export type OutlineChapter = {

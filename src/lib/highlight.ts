@@ -6,7 +6,7 @@ import { PLATFORMS, type PerPlatform, type QuizQuestion } from "@/content/types"
 
 let highlighter: Promise<Highlighter> | undefined;
 
-function getHighlighter() {
+export function getHighlighter() {
   highlighter ??= createHighlighter({
     themes: ["github-dark-default"],
     langs: ["tsx", "kotlin", "swift"],
