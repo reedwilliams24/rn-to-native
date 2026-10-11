@@ -8,6 +8,8 @@ export const PLATFORMS: { id: Platform; label: string; sub: string; lang: string
 
 export type PerPlatform<T> = Record<Platform, T>;
 
+export type DiagramId = "recomposition";
+
 export type Section = {
   id: string;
   title: string;
@@ -17,6 +19,8 @@ export type Section = {
   notes?: Partial<PerPlatform<string[]>>;
   compare?: { label: string; values: PerPlatform<string> }[];
   callout?: string;
+  /** Interactive diagram rendered after the prose */
+  diagram?: DiagramId;
 };
 
 export type QuizQuestion = {
