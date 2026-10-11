@@ -1,13 +1,14 @@
 "use client";
 
 import { useSyncExternalStore } from "react";
-import type { ExercisePlatform, QuizQuestion } from "@/content/types";
+import type { ExercisePlatform, QuizAnswer, QuizQuestion } from "@/content/types";
+import { isCorrect } from "@/lib/quiz";
 
 // All reading progress lives behind this module so a synced backend can replace localStorage later.
 const STORAGE_KEY = "rn2native.progress.v1";
 
 export type ChapterProgress = {
-  answers: (number | null)[];
+  answers: QuizAnswer[];
   correct: number;
   total: number;
   read: boolean;
@@ -72,10 +73,10 @@ function update(slug: string, fn: (prev: ChapterProgress) => ChapterProgress | n
   save({ chapters });
 }
 
-export function recordAnswer(slug: string, questions: QuizQuestion[], index: number, choice: number) {
+export function recordAnswer(slug: string, questions: QuizQuestion[], index: number, choice: NonNullable<QuizAnswer>) {
   update(slug, (prev) => {
     const answers = questions.map((_, i) => (i === index ? choice : (prev.answers[i] ?? null)));
-    const correct = answers.filter((a, i) => a === questions[i].answer).length;
+    const correct = answers.filter((a, i) => isCorrect(questions[i], a)).length;
     return { ...prev, answers, correct, total: questions.length };
   });
 }

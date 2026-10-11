@@ -388,5 +388,47 @@ export const async: Chapter = {
       answer: 1,
       explanation: "`callbackFlow` turns a listener API into a cold Flow. `awaitClose` runs the unsubscribe when the collector is cancelled. Swift's `AsyncStream` with `onTermination` is the same pattern.",
     },
+    {
+      kind: "predict",
+      platform: "android",
+      question: "What does this print?",
+      code: `fun main() = runBlocking {
+    launch {
+        delay(100)
+        println("A")
+    }
+    launch {
+        println("B")
+    }
+    println("C")
+}`,
+      options: [
+        "`A`, `B`, `C`",
+        "`C`, `B`, `A`",
+        "`B`, `C`, `A`",
+        "`C`, `A`, `B`",
+      ],
+      answer: 1,
+      explanation: "`launch` queues a child coroutine and returns right away, so `runBlocking`'s thread prints `C` first. Then the children run: the first suspends in `delay`, the second prints `B`, and `A` prints after 100 ms. It's like JS `.then` callbacks waiting for the current code to finish.",
+    },
+    {
+      kind: "bug",
+      platform: "android",
+      question: "The search keeps running after the user leaves the screen. Which line is the bug?",
+      code: `class SearchViewModel(private val api: Api) : ViewModel() {
+    val results = MutableStateFlow<List<String>>(emptyList())
+    private var job: Job? = null
+
+    fun onQueryChange(query: String) {
+        job?.cancel()
+        job = GlobalScope.launch {
+            delay(300)
+            results.value = api.search(query)
+        }
+    }
+}`,
+      answer: 7,
+      explanation: "`GlobalScope` isn't tied to anything, so the coroutine outlives the `ViewModel`. Use `viewModelScope.launch`, which is cancelled when the `ViewModel` is cleared. The `job?.cancel()` debounce keeps working either way.",
+    },
   ],
 };

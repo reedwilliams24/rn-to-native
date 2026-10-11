@@ -357,5 +357,58 @@ export const effects: Chapter = {
       answer: 1,
       explanation: "Configuration changes destroy and recreate the Activity by default. Load data in a `ViewModel`, which survives recreation, instead of in a composable effect.",
     },
+    {
+      kind: "predict",
+      platform: "android",
+      question: "The user types `a`, then `ab` 100 ms later, then stops typing. What prints?",
+      code: `@Composable
+fun SearchResults(query: String) {
+    LaunchedEffect(query) {
+        delay(300)
+        println("search $query")
+    }
+}`,
+      options: [
+        "`search a`, then `search ab`",
+        "Only `search ab`",
+        "`search ab` twice",
+        "Nothing. The effect only ran on first composition.",
+      ],
+      answer: 1,
+      explanation: "A new key cancels the running coroutine while it's suspended in `delay`, then starts a fresh one. That's a free debounce. In RN you'd need `setTimeout` plus a `clearTimeout` cleanup in `useEffect` to get the same thing.",
+    },
+    {
+      kind: "bug",
+      platform: "android",
+      question: "This composable logs every time the screen resumes. Which line is the bug?",
+      code: `@Composable
+fun ResumeLogger() {
+    val owner = LocalLifecycleOwner.current
+    DisposableEffect(owner) {
+        val observer = LifecycleEventObserver { _, event ->
+            if (event == Lifecycle.Event.ON_RESUME) {
+                Log.d("Screen", "resumed")
+            }
+        }
+        owner.lifecycle.addObserver(observer)
+        onDispose { }
+    }
+}`,
+      answer: 11,
+      explanation: "`onDispose` is the cleanup function you'd return from `useEffect`. Leaving it empty keeps the observer registered after the composable leaves, so it leaks and keeps logging. It should be `onDispose { owner.lifecycle.removeObserver(observer) }`.",
+    },
+    {
+      kind: "order",
+      question: "An Android Activity opens, then the user presses Back to close it. Put its lifecycle callbacks in the order they run.",
+      items: [
+        "`onCreate`",
+        "`onStart`",
+        "`onResume`",
+        "`onPause`",
+        "`onStop`",
+        "`onDestroy`",
+      ],
+      explanation: "Going up: created, started (visible), resumed (interactive). Leaving reverses it: paused, stopped, destroyed. Compose's `Lifecycle.Event.ON_*` values follow the same order, so `ON_RESUME` is the closest match to RN's `AppState` becoming `active`.",
+    },
   ],
 };

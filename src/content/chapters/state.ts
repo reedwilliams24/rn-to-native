@@ -386,5 +386,66 @@ export const state: Chapter = {
       answer: 1,
       explanation: "`@State` keeps the same instance for the view's lifetime, and SwiftUI doesn't track property writes on a plain class. A stored `var` on the struct is reset whenever the parent re-creates the view.",
     },
+    {
+      kind: "predict",
+      platform: "android",
+      question: "`Screen` is on display. You tap the button once. What prints?",
+      code: `@Composable
+fun Screen() {
+    var count by remember { mutableIntStateOf(0) }
+    println("Screen")
+    Header("Todos")
+    Button(onClick = { count++ }) {
+        println("Button content")
+        Text("Tapped $count times")
+    }
+}
+
+@Composable
+fun Header(title: String) {
+    println("Header")
+    Text(title)
+}`,
+      options: [
+        "`Screen`, `Header`, `Button content`",
+        "`Screen`, `Button content`",
+        "Only `Button content`",
+        "Nothing. Writing state in `onClick` doesn't recompose.",
+      ],
+      answer: 2,
+      explanation: "Compose tracks state *reads* per composable scope. `count` is only read inside the `Button` content lambda, so only that lambda re-runs. Even if `Screen` re-ran, `Header` would be skipped because `title` didn't change. React would re-render `Screen` and `Header` unless you add `memo`.",
+    },
+    {
+      kind: "bug",
+      platform: "ios",
+      question: "Tapping the button never updates its label. Which line is the bug?",
+      code: `class Cart {
+    var count = 0
+}
+
+struct CartButton: View {
+    @State private var cart = Cart()
+
+    var body: some View {
+        Button("Add (\\(cart.count))") {
+            cart.count += 1
+        }
+    }
+}`,
+      answer: 1,
+      explanation: "SwiftUI only sees property changes on classes marked `@Observable` (iOS 17). `@State` keeps the same `Cart` instance, and `count += 1` changes it without telling SwiftUI. Use `@Observable class Cart`, or make `Cart` a `struct` so writes count as a new value.",
+    },
+    {
+      kind: "order",
+      question: "In Compose, put the steps after a tap on a counter button in order.",
+      items: [
+        "`onClick` runs and writes `count++`",
+        "Compose marks the scopes that read `count` as invalid",
+        "On the next frame, only those scopes recompose",
+        "Layout measures and places anything that changed",
+        "Drawing renders the new frame",
+      ],
+      explanation: "Writing state doesn't re-run anything right away. It invalidates the scopes that read it, and the next frame runs the three phases: composition, then layout, then drawing. That's why `count` already holds the new value on the line after `count++`, unlike React's `setState`.",
+    },
   ],
 };

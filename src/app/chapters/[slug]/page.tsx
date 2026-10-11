@@ -11,7 +11,7 @@ import { Exercises } from "@/components/Exercises";
 import { ALL_CHAPTERS } from "@/content/outline";
 import { CHAPTERS } from "@/content/chapters";
 import type { Chapter, OutlineChapter } from "@/content/types";
-import { loadSnippet } from "@/lib/highlight";
+import { highlightQuizCode, loadSnippet } from "@/lib/highlight";
 import { Inline } from "@/lib/inline";
 
 export function generateStaticParams() {
@@ -211,7 +211,7 @@ async function ChapterBody({ meta, chapter }: { meta: OutlineChapter; chapter: C
               <h2 className="text-2xl font-semibold tracking-tight text-zinc-900">Check yourself</h2>
               <p className="mt-2 max-w-3xl text-zinc-600">A quick quiz on this chapter. Pick an answer to see why it&apos;s right or wrong.</p>
               <div className="mt-6">
-                <Quiz slug={chapter.slug} questions={chapter.quiz} />
+                <Quiz slug={chapter.slug} questions={chapter.quiz} code={await highlightQuizCode(chapter.quiz)} />
               </div>
               <div className="mt-8">
                 <MarkRead slug={chapter.slug} />
