@@ -422,5 +422,23 @@ fun ResumeLogger() {
       ],
       explanation: "Going up: created, started (visible), resumed (interactive). Leaving reverses it: paused, stopped, destroyed. Compose's `Lifecycle.Event.ON_*` values follow the same order, so `ON_RESUME` is the closest match to RN's `AppState` becoming `active`.",
     },
+    {
+      kind: "bug",
+      platform: "ios",
+      question: "The parent switches to a different `userID`, but the previous user stays on screen. Which line is the bug?",
+      code: `struct Profile: View {
+    let userID: String
+    @State private var user: User?
+
+    var body: some View {
+        Text(user?.name ?? "Loading…")
+            .task {
+                user = await api.user(userID)
+            }
+    }
+}`,
+      answer: 7,
+      explanation: "`.task` without an `id` runs once, when the view appears, like `useEffect` with `[]`. Use `.task(id: userID)` so it cancels the old load and starts a new one whenever `userID` changes, the same as adding it to the dependency array.",
+    },
   ],
 };

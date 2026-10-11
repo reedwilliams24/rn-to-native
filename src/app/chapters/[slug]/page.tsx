@@ -200,7 +200,7 @@ async function ChapterBody({ meta, chapter }: { meta: OutlineChapter; chapter: C
               <section id="practice" className="scroll-mt-20">
                 <h2 className="text-2xl font-semibold tracking-tight text-zinc-900">Practice: translate it</h2>
                 <p className="mt-2 max-w-3xl text-zinc-600">
-                  Fill in the blanks to turn the React Native code into Kotlin or Swift. Press Enter or Check to grade your answers.
+                  Fill in the blanks to turn the React Native code into Kotlin or Swift. Tap a blank, pick the right code from the word bank, then press Check.
                 </p>
                 <div className="mt-6">
                   <Exercises slug={chapter.slug} exercises={chapter.exercises} />

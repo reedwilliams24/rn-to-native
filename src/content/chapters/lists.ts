@@ -359,17 +359,14 @@ export const lists: Chapter = {
       prompt: "Render a lazily loaded list with a stable key per row, like `FlatList` with `keyExtractor`.",
       blanks: {
         android: [
-          { hint: "Compose's `FlatList`: a vertical list that only composes the rows on screen." },
-          { hint: "The `LazyListScope` function that emits one row per element of a list." },
-          {
-            hint: "Same job as `keyExtractor`. In a one-parameter lambda the parameter is implicitly named `it`.",
-            accept: ["todo -> todo.id", "t -> t.id", "item -> item.id"],
-          },
+          { hint: "Compose's `FlatList`: a vertical list that only composes the rows on screen.", distractors: ["Column", "FlatList", "LazyRow"] },
+          { hint: "The `LazyListScope` function that emits one row per element of a list.", distractors: ["forEach", "map", "item"] },
+          { hint: "Same job as `keyExtractor`. In a one-parameter lambda the parameter is implicitly named `it`.", distractors: ["index", "it", "this.id"] },
         ],
         ios: [
-          { hint: "The protocol that promises a stable `id` per element, so `List` doesn't need a key extractor." },
-          { hint: "SwiftUI's scrolling, lazily loaded table of rows." },
-          { hint: "Name the closure parameter. Swift closures list their parameters before the `in` keyword." },
+          { hint: "The protocol that promises a stable `id` per element, so `List` doesn't need a key extractor.", distractors: ["Hashable", "Equatable", "Codable"] },
+          { hint: "SwiftUI's scrolling, lazily loaded table of rows.", distractors: ["VStack", "FlatList", "ScrollView"] },
+          { hint: "Name the closure parameter. Swift closures list their parameters before the `in` keyword.", distractors: ["todo ->", "(todo) =>", "in todo"] },
         ],
       },
     },
@@ -440,6 +437,43 @@ export const lists: Chapter = {
       ],
       answer: 2,
       explanation: "SwiftUI scrolls by identity, not position. Pass the same `id` the `ForEach` uses for that row.",
+    },
+    {
+      kind: "bug",
+      platform: "android",
+      question: "Each row remembers whether it's expanded. After inserting a todo at the top, the expanded state shows on the wrong row. Which line is the bug?",
+      code: `@Composable
+fun Todos(todos: List<Todo>) {
+    LazyColumn {
+        itemsIndexed(
+            todos,
+            key = { index, _ -> index },
+        ) { _, todo ->
+            TodoRow(todo)
+        }
+    }
+}`,
+      answer: 6,
+      explanation: "Using the index as the key is like `keyExtractor={(_, i) => String(i)}`: after an insert, every row's key now points at a different todo, so its `remember`ed state moves with the position. Key by a stable id: `key = { _, todo -> todo.id }`.",
+    },
+    {
+      kind: "bug",
+      platform: "ios",
+      question: "After a swipe-to-delete, the rows' state jumps to the wrong todos, and it can crash. Which line is the bug?",
+      code: `struct TodoList: View {
+    @Binding var todos: [Todo]
+
+    var body: some View {
+        List {
+            ForEach(todos.indices, id: \\.self) { i in
+                TodoRow(todo: todos[i])
+            }
+            .onDelete { todos.remove(atOffsets: $0) }
+        }
+    }
+}`,
+      answer: 6,
+      explanation: "The identity here is the index, so deleting a row shifts which todo each identity points at. Stale indices can also go out of range. Iterate the `Identifiable` elements instead: `ForEach(todos) { todo in … }`, or `ForEach($todos) { $todo in … }` if you need bindings.",
     },
   ],
 };

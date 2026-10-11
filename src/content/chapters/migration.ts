@@ -340,5 +340,20 @@ export const migration: Chapter = {
       answer: 2,
       explanation: "The flag is your rollback. Keep it until the native screen has proven itself in production against the checklist (states, deep links, analytics, accessibility, platform behavior), then delete the RN code and the flag together.",
     },
+    {
+      kind: "bug",
+      platform: "ios",
+      question: "If the flag service is unreachable, every user gets the brand-new native checkout and you lose your rollback. Which line is the bug?",
+      code: `@ViewBuilder
+func checkout() -> some View {
+    if flags.bool("native_checkout", default: true) {
+        NativeCheckoutView()
+    } else {
+        RNCheckoutView()
+    }
+}`,
+      answer: 3,
+      explanation: "The fallback should be the proven path. Default the flag to `false` so a missing or failed flag fetch keeps users on the RN screen, and turn native on deliberately.",
+    },
   ],
 };

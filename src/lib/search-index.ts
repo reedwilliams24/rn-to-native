@@ -4,6 +4,7 @@ import path from "node:path";
 import { CHAPTERS } from "@/content/chapters";
 import { ALL_CHAPTERS } from "@/content/outline";
 import { PLATFORMS, type Chapter, type PerPlatform, type Section } from "@/content/types";
+import { extractLinks } from "./highlight";
 import { cheatsheetRowId, type SearchEntry, type SearchIndex } from "./search";
 
 const STOP = new Set([
@@ -32,7 +33,7 @@ function sectionText(slug: string, s: Section) {
   if (s.snippet) {
     for (const p of PLATFORMS) {
       const file = path.join(process.cwd(), "content", slug, s.snippet, `${p.id}.${p.ext}`);
-      if (fs.existsSync(file)) parts.push(fs.readFileSync(file, "utf8"));
+      if (fs.existsSync(file)) parts.push(extractLinks(fs.readFileSync(file, "utf8")).code);
     }
   }
   return parts.join("\n");

@@ -344,5 +344,37 @@ export const testing: Chapter = {
       answer: 1,
       explanation: "Jest snapshots store a text tree, which misses visual regressions. Paparazzi and swift-snapshot-testing render PNGs and fail on pixel differences, so goldens depend on a pinned device and OS setup.",
     },
+    {
+      kind: "bug",
+      platform: "android",
+      question: "This test passes even when the error message never appears. Which line is the bug?",
+      code: `class LoginTest {
+    @get:Rule val rule = createComposeRule()
+
+    @Test fun showsError() {
+        rule.setContent { LoginScreen() }
+        rule.onNodeWithText("Log in").performClick()
+        rule.onNodeWithText("Email is required")
+    }
+}`,
+      answer: 7,
+      explanation: "`onNodeWithText` only builds a matcher and checks nothing until you assert or act on it. Add `.assertIsDisplayed()`. RNTL's `getByText` throws when nothing matches; Compose finders don't.",
+    },
+    {
+      kind: "bug",
+      platform: "ios",
+      question: "This test always passes, even when `total` is wrong. Which line is the bug?",
+      code: `final class CartTests: XCTestCase {
+    func testTotal() {
+        let cart = Cart(api: FakeAPI())
+        Task {
+            await cart.load()
+            XCTAssertEqual(cart.total, 42)
+        }
+    }
+}`,
+      answer: 4,
+      explanation: "The test returns before the unstructured `Task` runs, so the assertion never runs in time. Make the test itself async (`func testTotal() async`) and `await cart.load()` directly, the same as returning or awaiting the promise in Jest.",
+    },
   ],
 };

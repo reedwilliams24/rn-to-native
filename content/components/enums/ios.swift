@@ -1,13 +1,13 @@
-enum Priority { case low, medium, high }
+enum Priority { case low, medium, high } // @link:enum
 
-struct PriorityBadge: View {
-    let priority: Priority
+struct PriorityBadge: View { // @link:fn
+    let priority: Priority // @link:param
 
     var body: some View {
-        switch priority {
-        case .high: Text("High").foregroundStyle(.red)
-        case .medium: Text("Medium").foregroundStyle(.orange)
-        case .low: Text("Low").foregroundStyle(.gray)
+        switch priority { // @link:switch
+        case .high: Text("High").foregroundStyle(.red) // @link:high
+        case .medium: Text("Medium").foregroundStyle(.orange) // @link:medium
+        case .low: Text("Low").foregroundStyle(.gray) // @link:low
         }
     }
 }
