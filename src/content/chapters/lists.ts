@@ -352,6 +352,28 @@ export const lists: Chapter = {
     { rn: "`React.memo`", android: "Automatic skipping", ios: "Automatic / `Equatable` view" },
     { rn: "`useCallback` for row props", android: "Not needed (strong skipping)", ios: "Not needed" },
   ],
+  exercises: [
+    {
+      id: "todo-list",
+      title: "A keyed todo list",
+      prompt: "Render a lazily loaded list with a stable key per row, like `FlatList` with `keyExtractor`.",
+      blanks: {
+        android: [
+          { hint: "Compose's `FlatList`: a vertical list that only composes the rows on screen." },
+          { hint: "The `LazyListScope` function that emits one row per element of a list." },
+          {
+            hint: "Same job as `keyExtractor`. In a one-parameter lambda the parameter is implicitly named `it`.",
+            accept: ["todo -> todo.id", "t -> t.id", "item -> item.id"],
+          },
+        ],
+        ios: [
+          { hint: "The protocol that promises a stable `id` per element, so `List` doesn't need a key extractor." },
+          { hint: "SwiftUI's scrolling, lazily loaded table of rows." },
+          { hint: "Name the closure parameter. Swift closures list their parameters before the `in` keyword." },
+        ],
+      },
+    },
+  ],
   quiz: [
     {
       question: "You render a `LazyColumn` with `items(todos) { TodoRow(it) }` and no key. Each row has a `remember`ed \"expanded\" flag. You insert a todo at the top. What happens?",

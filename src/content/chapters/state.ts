@@ -303,6 +303,27 @@ export const state: Chapter = {
     { rn: "Survive process death", android: "`rememberSaveable`", ios: "`@SceneStorage`" },
     { rn: "Custom hook / store", android: "`ViewModel` + `StateFlow`", ios: "`@Observable` class" },
   ],
+  exercises: [
+    {
+      id: "like-button",
+      title: "Lift a like toggle",
+      prompt: "The parent owns `liked` and the child flips it. Translate the state and the callback.",
+      blanks: {
+        android: [
+          { hint: "The Kotlin function type for a callback that takes nothing and returns nothing: TypeScript's `() => void`." },
+          { hint: "The delegation keyword that lets you read and assign `liked` directly instead of `liked.value`." },
+          { hint: "Keeps the state across recompositions, the way `useState` keeps its value across renders." },
+          { hint: "There's no setter. Assign the new value straight to the variable.", accept: ["liked = liked.not()"] },
+        ],
+        ios: [
+          { hint: "The child reads *and writes* the parent's state. One property wrapper replaces the `liked` + `onToggle` prop pair." },
+          { hint: "Flip the `Bool` in place. `Bool` has a method for exactly this.", accept: ["liked = !liked", "self.liked.toggle()", "self.liked = !self.liked"] },
+          { hint: "The property wrapper for state the view owns: SwiftUI's `useState`." },
+          { hint: "Prefix the state with `$` to pass a `Binding` instead of a copy of the value.", accept: ["self.$liked"] },
+        ],
+      },
+    },
+  ],
   quiz: [
     {
       question: "A Compose counter always shows 0, even though the button runs `count++`. The code is `var count by mutableStateOf(0)`. What's wrong?",
