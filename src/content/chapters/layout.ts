@@ -488,5 +488,19 @@ export const layout: Chapter = {
       answer: 2,
       explanation: "Pick the light or dark `ColorScheme` once, at the top of the tree. Components read roles like `primary`, so they switch automatically.",
     },
+    {
+      kind: "bug",
+      platform: "android",
+      question: "The close icon never shows up because the title pushes it off the screen. Which line is the bug?",
+      code: `@Composable
+fun Header(title: String) {
+    Row(Modifier.fillMaxWidth()) {
+        Text(title, Modifier.fillMaxWidth())
+        Icon(Icons.Default.Close, "Close")
+    }
+}`,
+      answer: 4,
+      explanation: "`fillMaxWidth()` inside a `Row` claims the whole width before the icon is measured. To take only the space left over, like `flex: 1`, use `Modifier.weight(1f)`.",
+    },
   ],
 };

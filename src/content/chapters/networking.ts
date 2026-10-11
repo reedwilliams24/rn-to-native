@@ -342,5 +342,33 @@ export const networking: Chapter = {
       answer: 1,
       explanation: "Neither platform ships a server-state cache library. The standard pattern is a repository that owns a cache (often Room or SwiftData) and a screen model that exposes loading, error, and data to the UI.",
     },
+    {
+      kind: "bug",
+      platform: "android",
+      question: "Called from `viewModelScope.launch`, this crashes with `NetworkOnMainThreadException`. Which line is the bug?",
+      code: `class UserRepo(private val client: OkHttpClient) {
+    suspend fun user(id: String): String {
+        val request = Request.Builder()
+            .url("https://example.com/users/$id")
+            .build()
+        return client.newCall(request).execute()
+            .body!!.string()
+    }
+}`,
+      answer: 6,
+      explanation: "Marking a function `suspend` doesn't move it off the main thread. `execute()` blocks whatever thread it runs on, and `viewModelScope` defaults to Main. Wrap the call in `withContext(Dispatchers.IO) { … }`, or use Retrofit's `suspend` APIs, which already do.",
+    },
+    {
+      kind: "bug",
+      platform: "ios",
+      question: "A 404 shows up as a confusing decoding error instead of \"not found\". Which line is the bug?",
+      code: `func user(id: String) async throws -> User {
+    let url = URL(string: "https://example.com/users/\\(id)")!
+    let (data, _) = try await URLSession.shared.data(from: url)
+    return try JSONDecoder().decode(User.self, from: data)
+}`,
+      answer: 3,
+      explanation: "Like `fetch`, `URLSession` only throws on transport errors. A 404 or 500 is still a successful response. Keep the response, cast it to `HTTPURLResponse`, and check that `statusCode` is in `200..<300` before decoding, the same as checking `res.ok`.",
+    },
   ],
 };

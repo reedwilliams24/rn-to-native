@@ -364,5 +364,36 @@ export const nativeApis: Chapter = {
       answer: 1,
       explanation: "In a composable, the local context is usually your `Activity`. Long-lived objects should hold `applicationContext`, which lives as long as the process.",
     },
+    {
+      kind: "bug",
+      platform: "android",
+      question: "Users who tap Deny still get sent to the camera screen. Which line is the bug?",
+      code: `@Composable
+fun ScanButton(onGranted: () -> Unit) {
+    val launcher = rememberLauncherForActivityResult(
+        ActivityResultContracts.RequestPermission(),
+    ) { granted -> onGranted() }
+    Button(onClick = {
+        launcher.launch(Manifest.permission.CAMERA)
+    }) { Text("Scan") }
+}`,
+      answer: 5,
+      explanation: "The result callback receives `granted` and ignores it. Use `if (granted) onGranted() else showRationale()`. Users can deny, and after two denials Android stops showing the dialog.",
+    },
+    {
+      kind: "bug",
+      platform: "ios",
+      question: "The location permission prompt flashes and disappears, or never shows up. Which line is the bug?",
+      code: `struct NearbyView: View {
+    var body: some View {
+        Button("Find me") {
+            let manager = CLLocationManager()
+            manager.requestWhenInUseAuthorization()
+        }
+    }
+}`,
+      answer: 4,
+      explanation: "The manager is a local variable, so it's deallocated as soon as the closure returns, taking the pending request with it. Keep a long-lived `CLLocationManager`, for example in an `@Observable` location service that the view holds in `@State`, and set its delegate to get the result.",
+    },
   ],
 };

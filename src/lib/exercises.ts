@@ -26,6 +26,19 @@ function parseBlanks(source: string) {
   return { code: code.trimEnd(), ranges };
 }
 
+/** Deterministic, so the server render and every reload show the same order. */
+function shuffle(items: string[], seedText: string) {
+  const out = [...items];
+  let seed = 0;
+  for (const ch of seedText) seed = (Math.imul(seed, 31) + ch.charCodeAt(0)) | 0;
+  for (let i = out.length - 1; i > 0; i--) {
+    seed = (Math.imul(seed, 1103515245) + 12345) | 0;
+    const j = (seed >>> 8) % (i + 1);
+    [out[i], out[j]] = [out[j], out[i]];
+  }
+  return out;
+}
+
 async function loadCloze(file: string, platform: ExercisePlatform, exercise: Exercise): Promise<Cloze> {
   const { code, ranges } = parseBlanks(await fs.readFile(file, "utf8"));
   const blanks = exercise.blanks[platform];
@@ -58,9 +71,15 @@ async function loadCloze(file: string, platform: ExercisePlatform, exercise: Exe
     return out;
   });
 
+  const answers = ranges.map((r) => code.slice(r.start, r.end));
   return {
     lines,
-    answers: ranges.map((r, i) => [code.slice(r.start, r.end), ...(blanks[i].accept ?? [])]),
+    answers,
+    options: answers.map((a, i) => {
+      const opts = [a, ...blanks[i].distractors];
+      if (new Set(opts).size !== opts.length) throw new Error(`${file}: duplicate word bank option for blank ${i + 1} in "${exercise.id}"`);
+      return shuffle(opts, a);
+    }),
     hints: blanks.map((b) => b.hint),
     solutionHtml: hl.codeToHtml(code, { lang: LANG[platform], theme: THEME }),
   };

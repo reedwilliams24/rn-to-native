@@ -330,21 +330,18 @@ export const navigation: Chapter = {
       prompt: "Navigate to a detail route with a param, read the param on the new screen, then pop back.",
       blanks: {
         android: [
-          { hint: "Creates the back stack holder and keeps it across recompositions." },
-          {
-            hint: "Push a route. With type-safe routes you pass an instance of the route class, params included.",
-            accept: ['navigate(route = Message("a"))', 'navigate(Message(id = "a"))'],
-          },
-          { hint: "The destination's route type, passed as a generic type argument (like `Stack.Screen name=…`)." },
-          { hint: "Decodes the back stack entry's arguments into the route object: your `route.params`.", accept: ["toRoute<Message>()"] },
-          { hint: "Removes the top destination from the stack, like `navigation.goBack()`.", accept: ["navigateUp()"] },
+          { hint: "Creates the back stack holder and keeps it across recompositions.", distractors: ["NavController()", "useNavigation()", "remember { NavHost() }"] },
+          { hint: "Push a route. With type-safe routes you pass an instance of the route class, params included.", distractors: ["navigate(\"Message\", \"a\")", "push(Message(\"a\"))", "navigate<Message>(\"a\")"] },
+          { hint: "The destination's route type, passed as a generic type argument (like `Stack.Screen name=…`).", distractors: ["Inbox", "String", "Message(\"a\")"] },
+          { hint: "Decodes the back stack entry's arguments into the route object: your `route.params`.", distractors: ["arguments", "params", "toMessage()"] },
+          { hint: "Removes the top destination from the stack, like `navigation.goBack()`.", distractors: ["goBack()", "finish()", "pop()"] },
         ],
         ios: [
-          { hint: "The container that owns the push/pop stack, like `Stack.Navigator`." },
-          { hint: "A button that pushes a value onto the stack when tapped." },
-          { hint: "Maps a pushed value's type to the screen it shows, like registering a `Stack.Screen`." },
-          { hint: "Read the dismiss action from the environment with a property wrapper and the `\\.dismiss` key path." },
-          { hint: "The dismiss action is callable. Call it like a function to pop this screen.", accept: ["self.dismiss()"] },
+          { hint: "The container that owns the push/pop stack, like `Stack.Navigator`.", distractors: ["NavigationView", "TabView", "Stack.Navigator"] },
+          { hint: "A button that pushes a value onto the stack when tapped.", distractors: ["Button", "Link", "NavigationButton"] },
+          { hint: "Maps a pushed value's type to the screen it shows, like registering a `Stack.Screen`.", distractors: ["sheet", "navigationTitle", "onTapGesture"] },
+          { hint: "Read the dismiss action from the environment with a property wrapper and the `\\.dismiss` key path.", distractors: ["@State", "@Binding", "@EnvironmentObject"] },
+          { hint: "The dismiss action is callable. Call it like a function to pop this screen.", distractors: ["dismiss", "goBack()", "pop()"] },
         ],
       },
     },
@@ -415,6 +412,37 @@ export const navigation: Chapter = {
       ],
       answer: 1,
       explanation: "Use `navigate(route) { launchSingleTop = true }` to reuse the top entry when it's already that destination, or debounce the tap.",
+    },
+    {
+      kind: "bug",
+      platform: "android",
+      question: "Home gets pushed over and over, and the back stack fills up with copies. Which line is the bug?",
+      code: `@Composable
+fun Splash(nav: NavController, loggedIn: Boolean) {
+    if (loggedIn) {
+        nav.navigate(Home)
+    }
+    Text("Loading…")
+}`,
+      answer: 4,
+      explanation: "Composition can run many times, so navigating from the body pushes on every recomposition. Navigation is a side effect: do it in `LaunchedEffect(loggedIn) { if (loggedIn) nav.navigate(Home) { popUpTo<Splash> { inclusive = true } } }`.",
+    },
+    {
+      kind: "bug",
+      platform: "ios",
+      question: "This screen is pushed from the inbox's `NavigationStack`. On it, the title and toolbar end up in a second nav bar, and links push onto the wrong stack. Which line is the bug?",
+      code: `struct MessageView: View {
+    let message: Message
+
+    var body: some View {
+        NavigationStack {
+            Text(message.body)
+                .navigationTitle(message.subject)
+        }
+    }
+}`,
+      answer: 5,
+      explanation: "Only the root owns a `NavigationStack`. A pushed screen already lives inside one, and wrapping it in another starts a separate nested navigator. Remove the wrapper and put `.navigationTitle` directly on the content.",
     },
   ],
 };
