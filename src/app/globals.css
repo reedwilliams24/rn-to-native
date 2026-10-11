@@ -22,3 +22,16 @@ body {
 .hide-ios [data-platform="ios"] {
   display: none;
 }
+
+@keyframes search-hit {
+  from {
+    background-color: #fef3c7;
+  }
+  to {
+    background-color: transparent;
+  }
+}
+
+[data-search-hit] {
+  animation: search-hit 2s ease-out;
+}

@@ -11,6 +11,7 @@ import { CHAPTERS } from "@/content/chapters";
 import type { Chapter, OutlineChapter } from "@/content/types";
 import { loadSnippet } from "@/lib/highlight";
 import { Inline } from "@/lib/inline";
+import { cheatsheetRowId } from "@/lib/search";
 
 export function generateStaticParams() {
   return ALL_CHAPTERS.map((c) => ({ slug: c.slug }));
@@ -177,7 +178,7 @@ async function ChapterBody({ meta, chapter }: { meta: OutlineChapter; chapter: C
             <section id="cheatsheet" className="scroll-mt-20">
               <h2 className="text-2xl font-semibold tracking-tight text-zinc-900">Cheat sheet</h2>
               <div className="mt-6">
-                <CompareTable rows={chapter.cheatsheet.map((values) => ({ values }))} />
+                <CompareTable rows={chapter.cheatsheet.map((values, i) => ({ values, id: cheatsheetRowId(i) }))} />
               </div>
             </section>
 
