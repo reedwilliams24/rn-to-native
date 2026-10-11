@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { OUTLINE } from "@/content/outline";
 import { CHAPTERS } from "@/content/chapters";
+import { ProgressBadge } from "./ProgressBadge";
 
 export function Sidebar({ active }: { active?: string }) {
   return (
@@ -26,7 +27,7 @@ export function Sidebar({ active }: { active?: string }) {
                   >
                     <span className="w-5 shrink-0 text-right tabular-nums text-xs opacity-70">{c.number}</span>
                     <span className="flex-1">{c.title}</span>
-                    {!drafted ? <span className="text-[10px] uppercase tracking-wide">planned</span> : null}
+                    {drafted ? <ProgressBadge slug={c.slug} /> : <span className="text-[10px] uppercase tracking-wide">planned</span>}
                   </Link>
                 </li>
               );
