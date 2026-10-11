@@ -391,5 +391,34 @@ export const languages: Chapter = {
       answer: 2,
       explanation: "Both languages are nominally typed. A matching shape isn't enough. In Swift you can add the conformance after the fact with `extension Task: TodoLike {}`. In Kotlin you need to declare it on the class or write an adapter.",
     },
+    {
+      kind: "bug",
+      platform: "android",
+      question: "This prints `false`, but the author expected two points with the same coordinates to be equal. Which line is the bug?",
+      code: `class Point(val x: Int, val y: Int)
+
+fun main() {
+    val a = Point(1, 2)
+    val b = Point(1, 2)
+    println(a == b)
+}`,
+      answer: 1,
+      explanation: "`==` calls `equals`, and a plain class inherits identity equality, so two separate instances are never equal. Make it a `data class` to get `equals`, `hashCode`, `toString` and `copy` generated from the properties.",
+    },
+    {
+      kind: "bug",
+      platform: "ios",
+      question: "The author expected this to print `true`. Which line explains why it prints `false`?",
+      code: `struct Settings {
+    var darkMode = false
+}
+
+var a = Settings()
+var b = a
+b.darkMode = true
+print(a.darkMode)`,
+      answer: 1,
+      explanation: "Structs are value types, so `var b = a` copies the value and changing `b` leaves `a` alone. In JS, objects are shared references. Make it a `class` if the two variables really should share one instance. Usually, though, the copy is what you want, so just change `a`.",
+    },
   ],
 };

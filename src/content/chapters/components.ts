@@ -329,5 +329,38 @@ export const components: Chapter = {
       answer: 1,
       explanation: "Use `sp` for text so it scales with the user's font-size setting, and `dp` for layout. SwiftUI uses plain points and scales text with Dynamic Type through text styles like `.body`.",
     },
+    {
+      kind: "bug",
+      platform: "android",
+      question: "Callers pass `Modifier.testTag(\"badge\")` and alignment modifiers, but none of them apply. Which line is the bug?",
+      code: `@Composable
+fun Badge(
+    text: String,
+    modifier: Modifier = Modifier,
+) {
+    Text(
+        text,
+        Modifier.padding(4.dp),
+    )
+}`,
+      answer: 8,
+      explanation: "The root ignores the `modifier` parameter and starts a fresh `Modifier` chain, so whatever the caller passed is dropped. It's like a component that takes a `style` prop and never forwards it. Use `modifier.padding(4.dp)`.",
+    },
+    {
+      kind: "bug",
+      platform: "ios",
+      question: "The parent passes a new `user.name`, but `Greeting` keeps showing the first name it got. Which line is the bug?",
+      code: `struct Greeting: View {
+    @State var name: String
+
+    var body: some View {
+        Text("Hello, \\(name)")
+    }
+}
+
+// Parent: Greeting(name: user.name)`,
+      answer: 2,
+      explanation: "`@State` is state the view owns. It takes the initial value once and ignores later ones, like `useState(props.name)`. A value that comes from the parent is a plain prop: `let name: String`.",
+    },
   ],
 };

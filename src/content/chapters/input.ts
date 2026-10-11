@@ -341,5 +341,40 @@ export const input: Chapter = {
       answer: 1,
       explanation: "Focus is a side effect. Request it from `LaunchedEffect(Unit)`, which runs after the field is composed and attached (Chapter 6).",
     },
+    {
+      kind: "bug",
+      platform: "android",
+      question: "Typing does nothing: the field stays empty. Which line is the bug?",
+      code: `@Composable
+fun NameField() {
+    var name by remember { mutableStateOf("") }
+    TextField(
+        value = name,
+        onValueChange = { },
+        label = { Text("Name") },
+    )
+}`,
+      answer: 6,
+      explanation: "`TextField` is a controlled input. It shows `value` and reports edits through `onValueChange`, the way RN's `TextInput` has `value` and `onChangeText`. If the state never changes, every keystroke is thrown away. Use `onValueChange = { name = it }`.",
+    },
+    {
+      kind: "bug",
+      platform: "ios",
+      question: "The password shows in plain text, and the keyboard offers autocorrect suggestions for it. Which line is the bug?",
+      code: `struct LoginForm: View {
+    @State private var email = ""
+    @State private var password = ""
+
+    var body: some View {
+        Form {
+            TextField("Email", text: $email)
+                .keyboardType(.emailAddress)
+            TextField("Password", text: $password)
+        }
+    }
+}`,
+      answer: 9,
+      explanation: "Passwords need `SecureField(\"Password\", text: $password)`, SwiftUI's `secureTextEntry`. It masks the input, turns off autocorrect, and lets password managers fill it.",
+    },
   ],
 };

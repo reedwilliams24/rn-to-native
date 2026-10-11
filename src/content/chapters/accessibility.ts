@@ -408,5 +408,37 @@ export const accessibility: Chapter = {
       answer: 1,
       explanation: "`start` and `end` follow the layout direction, so they flip in RTL locales. `absolutePadding` and raw offsets don't. SwiftUI's version is leading/trailing, and RN needs `I18nManager` plus a restart.",
     },
+    {
+      kind: "bug",
+      platform: "android",
+      question: "TalkBack announces this as just \"Button\". Which line is the bug?",
+      code: `@Composable
+fun DeleteButton(onDelete: () -> Unit) {
+    IconButton(onClick = onDelete) {
+        Icon(
+            Icons.Default.Delete,
+            contentDescription = null,
+        )
+    }
+}`,
+      answer: 6,
+      explanation: "`null` marks the icon as decorative, so an icon-only button has nothing to announce. Pass `contentDescription = \"Delete\"`, the equivalent of `accessibilityLabel`. Use `null` only when visible text already labels the button.",
+    },
+    {
+      kind: "bug",
+      platform: "ios",
+      question: "Users with large text settings say the captions never get bigger. Which line is the bug?",
+      code: `struct Caption: View {
+    let text: String
+
+    var body: some View {
+        Text(text)
+            .font(.system(size: 13))
+            .foregroundStyle(.secondary)
+    }
+}`,
+      answer: 6,
+      explanation: "A fixed point size opts out of Dynamic Type. Use a text style like `.font(.caption)`. If you need a custom size, use `.font(.system(.caption, design: .rounded))`, or scale it with `@ScaledMetric`.",
+    },
   ],
 };

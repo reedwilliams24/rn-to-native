@@ -499,5 +499,17 @@ export const tooling: Chapter = {
       answer: 2,
       explanation: "Previews render a component in the IDE as you edit, which makes them the main fast feedback loop. Android Studio's Live Edit can also update composables in a running app. For non-UI changes on both platforms, you do an incremental rebuild.",
     },
+    {
+      kind: "bug",
+      platform: "android",
+      question: "JUnit ends up packaged inside the release APK. Which line is the bug?",
+      code: `dependencies {
+    implementation(libs.androidx.compose.material3)
+    implementation(libs.retrofit)
+    implementation(libs.junit)
+}`,
+      answer: 4,
+      explanation: "`implementation` ships the library with the app. Test-only libraries go in `testImplementation` (local JVM tests) or `androidTestImplementation` (instrumented tests). That's the Gradle version of `devDependencies`.",
+    },
   ],
 };

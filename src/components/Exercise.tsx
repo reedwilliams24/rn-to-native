@@ -1,8 +1,8 @@
 "use client";
 
-import { useId, useRef, useState, type KeyboardEvent } from "react";
+import { useEffect, useId, useRef, useState, type KeyboardEvent } from "react";
 import { PLATFORMS, type ExercisePlatform, type Platform } from "@/content/types";
-import { isAccepted, type Cloze, type ExerciseData } from "@/lib/cloze";
+import type { Cloze, ExerciseData } from "@/lib/cloze";
 import { Inline } from "@/lib/inline";
 import { exerciseProgress, recordExerciseSolved, useProgress } from "@/lib/progress";
 import { PLATFORM_STYLE } from "./platform";
@@ -15,16 +15,18 @@ const TABS: { id: Tab; label: string }[] = [
 ];
 
 type PaneState = {
-  values: string[];
-  /** null until graded; reset when that blank is edited */
+  values: (string | null)[];
+  /** null until graded; reset when that blank is changed */
   results: (boolean | null)[];
   hints: boolean[];
   solution: boolean;
+  /** The blank whose word bank is open */
+  active: number | null;
 };
 
 function initial(cloze: Cloze): PaneState {
   const n = cloze.answers.length;
-  return { values: Array(n).fill(""), results: Array(n).fill(null), hints: Array(n).fill(false), solution: false };
+  return { values: Array(n).fill(null), results: Array(n).fill(null), hints: Array(n).fill(false), solution: false, active: 0 };
 }
 
 export function Exercise({ slug, data }: { slug: string; data: ExerciseData }) {
@@ -162,19 +164,44 @@ function ClozePane({
   patch: (fn: (s: PaneState) => PaneState) => void;
   onSolved: () => void;
 }) {
-  const inputs = useRef<(HTMLInputElement | null)[]>([]);
+  const root = useRef<HTMLDivElement>(null);
+  const pendingFocus = useRef<string | null>(null);
   const n = cloze.answers.length;
   const graded = state.results.filter((r) => r !== null).length;
   const correct = state.results.filter((r) => r === true).length;
-  const filled = state.values.filter((v) => v.trim()).length;
+  const filled = state.values.filter((v) => v !== null).length;
   const label = PLATFORMS.find((p) => p.id === platform)!.label;
+  const active = state.active;
+
+  useEffect(() => {
+    if (!pendingFocus.current) return;
+    root.current?.querySelector<HTMLElement>(`[data-focus="${pendingFocus.current}"]`)?.focus();
+    pendingFocus.current = null;
+  });
+
+  function open(i: number | null, focus?: string) {
+    patch((s) => ({ ...s, active: i }));
+    if (focus) pendingFocus.current = focus;
+  }
+
+  function pick(i: number, option: string) {
+    const values = state.values.map((v, j) => (j === i ? option : v));
+    const next = [...values.keys()].map((k) => (i + 1 + k) % n).find((j) => values[j] === null);
+    patch((s) => ({
+      ...s,
+      values,
+      results: s.results.map((r, j) => (j === i ? null : r)),
+      active: next ?? null,
+    }));
+    pendingFocus.current = next === undefined ? "check" : `chip-0`;
+  }
 
   function check() {
-    const results = state.values.map((v, i) => isAccepted(v, cloze.answers[i]));
-    patch((s) => ({ ...s, results }));
+    const results = state.values.map((v, i) => v === cloze.answers[i]);
     const firstWrong = results.indexOf(false);
+    patch((s) => ({ ...s, results, active: firstWrong === -1 ? null : firstWrong }));
     if (firstWrong === -1) onSolved();
-    else inputs.current[firstWrong]?.focus();
+    else pendingFocus.current = `blank-${firstWrong}`;
   }
 
   const status =
@@ -182,10 +209,10 @@ function ClozePane({
       ? `${filled} of ${n} blanks filled.`
       : correct === n
         ? `✓ All ${n} blanks correct. Solved!`
-        : `✗ ${correct} of ${n} correct. Fix the blanks marked ✗ and check again.`;
+        : `✗ ${correct} of ${n} correct. Change the blanks marked ✗ and check again.`;
 
   return (
-    <div className="flex min-w-0 flex-1 flex-col" role="group" aria-label={`${label} exercise`}>
+    <div ref={root} className="flex min-w-0 flex-1 flex-col" role="group" aria-label={`${label} exercise`}>
       <PaneHeader platform={platform} solved={solved} />
       <div className="code overflow-x-auto rounded-b-lg border border-zinc-800 bg-[#0d1117] text-[12.5px] leading-relaxed">
         <pre className="shiki" style={{ color: "#e6edf3" }}>
@@ -196,25 +223,16 @@ function ClozePane({
                 <span className="line">
                   {line.map((seg, si) =>
                     "blank" in seg ? (
-                      <BlankInput
+                      <BlankSlot
                         key={si}
                         index={seg.blank}
                         total={n}
                         describedBy={`${id}-b${seg.blank}`}
-                        size={cloze.answers[seg.blank][0].length}
+                        controls={`${id}-bank`}
                         value={state.values[seg.blank]}
                         result={state.results[seg.blank]}
-                        inputRef={(el) => {
-                          inputs.current[seg.blank] = el;
-                        }}
-                        onChange={(v) =>
-                          patch((s) => ({
-                            ...s,
-                            values: s.values.map((x, i) => (i === seg.blank ? v : x)),
-                            results: s.results.map((x, i) => (i === seg.blank ? null : x)),
-                          }))
-                        }
-                        onEnter={check}
+                        active={active === seg.blank}
+                        onOpen={() => open(seg.blank, "chip-0")}
                       />
                     ) : (
                       <span key={si} style={seg.color ? { color: seg.color } : undefined}>
@@ -229,11 +247,54 @@ function ClozePane({
         </pre>
       </div>
 
+      <div id={`${id}-bank`} className="mt-3">
+        {active !== null ? (
+          <div
+            role="group"
+            aria-label={`Options for blank ${active + 1}`}
+            onKeyDown={(e) => {
+              if (e.key === "Escape") {
+                e.preventDefault();
+                open(null, `blank-${active}`);
+              }
+            }}
+            className="rounded-lg border border-zinc-200 bg-zinc-50 p-3"
+          >
+            <div className="mb-2 text-xs font-medium text-zinc-500">
+              Blank {active + 1}: pick one
+            </div>
+            <div className="flex flex-wrap gap-2">
+              {cloze.options[active].map((opt, oi) => {
+                const chosen = state.values[active] === opt;
+                return (
+                  <button
+                    key={opt}
+                    type="button"
+                    data-focus={`chip-${oi}`}
+                    aria-pressed={chosen}
+                    onClick={() => pick(active, opt)}
+                    className={`rounded-md border px-2.5 py-1.5 font-mono text-[13px] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sky-500 ${
+                      chosen ? "border-zinc-900 bg-zinc-900 text-white" : "border-zinc-300 bg-white text-zinc-800 hover:border-zinc-500"
+                    }`}
+                  >
+                    {opt}
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+        ) : (
+          <p className="text-sm text-zinc-500">Tap a blank to choose what goes there.</p>
+        )}
+      </div>
+
       <div className="mt-3 flex flex-wrap items-center gap-2">
         <button
           type="button"
+          data-focus="check"
           onClick={check}
-          className="rounded-md bg-zinc-900 px-3 py-1.5 text-sm font-medium text-white hover:bg-zinc-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sky-500"
+          disabled={filled < n}
+          className="rounded-md bg-zinc-900 px-3 py-1.5 text-sm font-medium text-white hover:bg-zinc-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sky-500 disabled:cursor-not-allowed disabled:bg-zinc-300"
         >
           Check
         </button>
@@ -250,7 +311,7 @@ function ClozePane({
           type="button"
           onClick={() => {
             patch(() => initial(cloze));
-            inputs.current[0]?.focus();
+            pendingFocus.current = "blank-0";
           }}
           className="rounded-md px-3 py-1.5 text-sm text-zinc-600 hover:bg-zinc-50 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sky-500"
         >
@@ -302,57 +363,47 @@ function ClozePane({
   );
 }
 
-function BlankInput({
+function BlankSlot({
   index,
   total,
   describedBy,
-  size,
+  controls,
   value,
   result,
-  inputRef,
-  onChange,
-  onEnter,
+  active,
+  onOpen,
 }: {
   index: number;
   total: number;
   describedBy: string;
-  size: number;
-  value: string;
+  controls: string;
+  value: string | null;
   result: boolean | null;
-  inputRef: (el: HTMLInputElement | null) => void;
-  onChange: (v: string) => void;
-  onEnter: () => void;
+  active: boolean;
+  onOpen: () => void;
 }) {
   const tone =
     result === true
       ? "border-solid border-emerald-400 bg-emerald-950/60"
       : result === false
         ? "border-solid border-rose-400 bg-rose-950/60"
-        : "border-dashed border-zinc-500 bg-zinc-800/80";
+        : active
+          ? "border-solid border-sky-400 bg-sky-950/60"
+          : "border-dashed border-zinc-500 bg-zinc-800/80";
   return (
     <>
-      <input
-        ref={inputRef}
-        type="text"
-        value={value}
-        placeholder={String(index + 1)}
-        aria-label={`Blank ${index + 1} of ${total}`}
+      <button
+        type="button"
+        data-focus={`blank-${index}`}
+        aria-label={`Blank ${index + 1} of ${total}: ${value ?? "empty"}`}
         aria-describedby={describedBy}
-        aria-invalid={result === false}
-        autoComplete="off"
-        autoCapitalize="off"
-        autoCorrect="off"
-        spellCheck={false}
-        onChange={(e) => onChange(e.target.value)}
-        onKeyDown={(e) => {
-          if (e.key === "Enter") {
-            e.preventDefault();
-            onEnter();
-          }
-        }}
-        style={{ width: `${Math.max(size, value.length, 2)}ch` }}
-        className={`mx-px box-content rounded border px-[0.5ch] font-[inherit] text-zinc-50 placeholder:text-zinc-500 focus:outline-2 focus:outline-sky-400 ${tone}`}
-      />
+        aria-expanded={active}
+        aria-controls={controls}
+        onClick={onOpen}
+        className={`mx-px min-w-[3ch] rounded border px-[0.5ch] text-zinc-50 focus-visible:outline-2 focus-visible:outline-sky-400 ${tone}`}
+      >
+        {value ?? <span className="text-zinc-500">{index + 1}</span>}
+      </button>
       {result !== null ? (
         <span aria-hidden className={`ml-0.5 font-sans font-bold ${result ? "text-emerald-400" : "text-rose-400"}`}>
           {result ? "✓" : "✗"}

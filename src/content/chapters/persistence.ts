@@ -338,5 +338,28 @@ export const persistence: Chapter = {
       answer: 2,
       explanation: "Caches directories aren't backed up and can be cleared by the system when space runs low, which is fine for data you can re-download. Documents and `filesDir` are for user data you can't recreate.",
     },
+    {
+      kind: "bug",
+      platform: "android",
+      question: "Calling `dao.all()` from a click handler crashes with \"Cannot access database on the main thread\". Which line is the bug?",
+      code: `@Dao
+interface TodoDao {
+    @Query("SELECT * FROM todos")
+    fun all(): List<Todo>
+}`,
+      answer: 4,
+      explanation: "A blocking DAO method does disk I/O on whatever thread calls it, and Room refuses to run on Main. Make it `suspend fun all(): List<Todo>`, or return `Flow<List<Todo>>` to observe changes. Room then moves the work to a background thread for you.",
+    },
+    {
+      kind: "bug",
+      platform: "ios",
+      question: "A security review flags this sign-in code. Which line is the bug?",
+      code: `func signIn(token: String) {
+    UserDefaults.standard.set(token, forKey: "authToken")
+    isSignedIn = true
+}`,
+      answer: 2,
+      explanation: "`UserDefaults` is an unencrypted plist, the AsyncStorage of iOS. It ends up in backups and is readable on a compromised device. Secrets go in the Keychain (what `expo-secure-store` uses).",
+    },
   ],
 };

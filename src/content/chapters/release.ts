@@ -376,5 +376,25 @@ export const release: Chapter = {
       answer: 1,
       explanation: "Only builds that already contain the check can be blocked. If v1.0 ships without it, you can never force v1.0 users to update.",
     },
+    {
+      kind: "bug",
+      platform: "android",
+      question: "Play Console rejects the upload of this release build. Which line is the bug?",
+      code: `android {
+    defaultConfig {
+        applicationId = "com.example.todo"
+        versionCode = 12
+        versionName = "1.3.0"
+    }
+    buildTypes {
+        release {
+            isMinifyEnabled = true
+            signingConfig = signingConfigs.getByName("debug")
+        }
+    }
+}`,
+      answer: 10,
+      explanation: "The release build is signed with the debug key, which Play rejects. Create a release `signingConfig` with your upload key (read the passwords from environment variables or `local.properties`, never from the repo) and use that. EAS used to manage this key for you.",
+    },
   ],
 };

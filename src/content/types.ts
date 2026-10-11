@@ -53,8 +53,8 @@ export type ExercisePlatform = "android" | "ios";
 
 export type ExerciseBlank = {
   hint: string;
-  /** Accepted besides the solution text between the markers. Compared whitespace-insensitively. */
-  accept?: string[];
+  /** Wrong options shown in the word bank next to the solution text between the markers */
+  distractors: string[];
 };
 
 export type Exercise = {

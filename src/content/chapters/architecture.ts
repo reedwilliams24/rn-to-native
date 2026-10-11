@@ -373,5 +373,31 @@ export const architecture: Chapter = {
       answer: 1,
       explanation: "This is state hoisting, the native name for the container/presentational split. The stateless half takes plain data and callbacks, so you can render it in a preview or test without building a real store.",
     },
+    {
+      kind: "bug",
+      platform: "android",
+      question: "Rotating the phone empties the cart. Which line is the bug?",
+      code: `@Composable
+fun CartScreen() {
+    val vm = remember { CartViewModel() }
+    val items by vm.items.collectAsState()
+    CartList(items, onRemove = vm::remove)
+}`,
+      answer: 3,
+      explanation: "`remember` only lives as long as the composition, and a configuration change like rotation recreates the Activity. `viewModel()` gets the instance from the `ViewModelStore`, which survives that and is cleared only when the screen is gone for good.",
+    },
+    {
+      kind: "bug",
+      platform: "ios",
+      question: "Every time the parent re-renders, the cart starts empty again. Which line is the bug?",
+      code: `struct CartScreen: View {
+    var body: some View {
+        let model = CartModel()
+        CartList(model: model)
+    }
+}`,
+      answer: 3,
+      explanation: "`body` runs on every update, so this builds a brand-new model each time, like calling `new Store()` inside a render function. Let the view own it: `@State private var model = CartModel()` with an `@Observable` class.",
+    },
   ],
 };

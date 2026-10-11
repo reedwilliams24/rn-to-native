@@ -387,5 +387,42 @@ export const animation: Chapter = {
       answer: 1,
       explanation: "SwiftUI's haptics are declarative, like `.animation(_:value:)`. Compose's `LocalHapticFeedback` is imperative, like `expo-haptics`.",
     },
+    {
+      kind: "bug",
+      platform: "android",
+      question: "The box should fade in and out, but it snaps between visible and hidden. Which line is the bug?",
+      code: `@Composable
+fun Fader(visible: Boolean) {
+    val alpha = if (visible) 1f else 0f
+    Box(
+        Modifier
+            .size(80.dp)
+            .alpha(alpha)
+            .background(Color.Red),
+    )
+}`,
+      answer: 3,
+      explanation: "That's a plain value, so it jumps straight to the target. `val alpha by animateFloatAsState(if (visible) 1f else 0f)` animates toward the target whenever it changes, much like `withTiming` on a shared value. For showing and hiding, `AnimatedVisibility(visible)` also works.",
+    },
+    {
+      kind: "bug",
+      platform: "ios",
+      question: "The details should fade in and out, but they pop in and out instead. Which line is the bug?",
+      code: `struct Expander: View {
+    @State private var open = false
+
+    var body: some View {
+        VStack {
+            Button("Toggle") { open.toggle() }
+            if open {
+                Text("Details")
+                    .transition(.opacity)
+            }
+        }
+    }
+}`,
+      answer: 6,
+      explanation: "A `.transition` only plays when the change happens inside an animation. Use `withAnimation { open.toggle() }`, or add `.animation(.default, value: open)` to the container.",
+    },
   ],
 };
