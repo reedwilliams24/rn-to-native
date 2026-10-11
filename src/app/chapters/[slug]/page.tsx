@@ -6,6 +6,7 @@ import { CompareTable } from "@/components/CompareTable";
 import { PlatformFilter } from "@/components/PlatformFilter";
 import { MarkRead } from "@/components/MarkRead";
 import { Quiz } from "@/components/Quiz";
+import { Exercises } from "@/components/Exercises";
 import { ALL_CHAPTERS } from "@/content/outline";
 import { CHAPTERS } from "@/content/chapters";
 import type { Chapter, OutlineChapter } from "@/content/types";
@@ -117,6 +118,13 @@ async function ChapterBody({ meta, chapter }: { meta: OutlineChapter; chapter: C
                 Cheat sheet
               </a>
             </li>
+            {chapter.exercises?.length ? (
+              <li>
+                <a href="#practice" className="hover:text-zinc-900">
+                  Practice
+                </a>
+              </li>
+            ) : null}
             <li>
               <a href="#quiz" className="hover:text-zinc-900">
                 Quiz
@@ -180,6 +188,18 @@ async function ChapterBody({ meta, chapter }: { meta: OutlineChapter; chapter: C
                 <CompareTable rows={chapter.cheatsheet.map((values) => ({ values }))} />
               </div>
             </section>
+
+            {chapter.exercises?.length ? (
+              <section id="practice" className="scroll-mt-20">
+                <h2 className="text-2xl font-semibold tracking-tight text-zinc-900">Practice: translate it</h2>
+                <p className="mt-2 max-w-3xl text-zinc-600">
+                  Fill in the blanks to turn the React Native code into Kotlin or Swift. Press Enter or Check to grade your answers.
+                </p>
+                <div className="mt-6">
+                  <Exercises slug={chapter.slug} exercises={chapter.exercises} />
+                </div>
+              </section>
+            ) : null}
 
             <section id="quiz" className="scroll-mt-20">
               <h2 className="text-2xl font-semibold tracking-tight text-zinc-900">Check yourself</h2>
