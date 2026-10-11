@@ -6,11 +6,14 @@ import { CompareTable } from "@/components/CompareTable";
 import { PlatformFilter } from "@/components/PlatformFilter";
 import { MarkRead } from "@/components/MarkRead";
 import { Quiz } from "@/components/Quiz";
+import { Diagram } from "@/components/diagrams";
+import { Exercises } from "@/components/Exercises";
 import { ALL_CHAPTERS } from "@/content/outline";
 import { CHAPTERS } from "@/content/chapters";
 import type { Chapter, OutlineChapter } from "@/content/types";
-import { loadSnippet } from "@/lib/highlight";
+import { highlightQuizCode, loadSnippet } from "@/lib/highlight";
 import { Inline } from "@/lib/inline";
+import { cheatsheetRowId } from "@/lib/search";
 
 export function generateStaticParams() {
   return ALL_CHAPTERS.map((c) => ({ slug: c.slug }));
@@ -117,6 +120,13 @@ async function ChapterBody({ meta, chapter }: { meta: OutlineChapter; chapter: C
                 Cheat sheet
               </a>
             </li>
+            {chapter.exercises?.length ? (
+              <li>
+                <a href="#practice" className="hover:text-zinc-900">
+                  Practice
+                </a>
+              </li>
+            ) : null}
             <li>
               <a href="#quiz" className="hover:text-zinc-900">
                 Quiz
@@ -142,6 +152,11 @@ async function ChapterBody({ meta, chapter }: { meta: OutlineChapter; chapter: C
                     </p>
                   ))}
                 </div>
+                {s.diagram ? (
+                  <div className="mt-6">
+                    <Diagram id={s.diagram} />
+                  </div>
+                ) : null}
                 {s.compare ? (
                   <div className="mt-6">
                     <CompareTable rows={s.compare} />
@@ -177,15 +192,27 @@ async function ChapterBody({ meta, chapter }: { meta: OutlineChapter; chapter: C
             <section id="cheatsheet" className="scroll-mt-20">
               <h2 className="text-2xl font-semibold tracking-tight text-zinc-900">Cheat sheet</h2>
               <div className="mt-6">
-                <CompareTable rows={chapter.cheatsheet.map((values) => ({ values }))} />
+                <CompareTable rows={chapter.cheatsheet.map((values, i) => ({ values, id: cheatsheetRowId(i) }))} />
               </div>
             </section>
+
+            {chapter.exercises?.length ? (
+              <section id="practice" className="scroll-mt-20">
+                <h2 className="text-2xl font-semibold tracking-tight text-zinc-900">Practice: translate it</h2>
+                <p className="mt-2 max-w-3xl text-zinc-600">
+                  Fill in the blanks to turn the React Native code into Kotlin or Swift. Press Enter or Check to grade your answers.
+                </p>
+                <div className="mt-6">
+                  <Exercises slug={chapter.slug} exercises={chapter.exercises} />
+                </div>
+              </section>
+            ) : null}
 
             <section id="quiz" className="scroll-mt-20">
               <h2 className="text-2xl font-semibold tracking-tight text-zinc-900">Check yourself</h2>
               <p className="mt-2 max-w-3xl text-zinc-600">A quick quiz on this chapter. Pick an answer to see why it&apos;s right or wrong.</p>
               <div className="mt-6">
-                <Quiz slug={chapter.slug} questions={chapter.quiz} />
+                <Quiz slug={chapter.slug} questions={chapter.quiz} code={await highlightQuizCode(chapter.quiz)} />
               </div>
               <div className="mt-8">
                 <MarkRead slug={chapter.slug} />

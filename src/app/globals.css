@@ -65,3 +65,16 @@ body {
 .linkable.link-pinned [data-platform] .line.link-active {
   background: rgb(var(--link) / 0.26);
 }
+
+@keyframes search-hit {
+  from {
+    background-color: #fef3c7;
+  }
+  to {
+    background-color: transparent;
+  }
+}
+
+[data-search-hit] {
+  animation: search-hit 2s ease-out;
+}

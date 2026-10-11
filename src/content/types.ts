@@ -8,6 +8,8 @@ export const PLATFORMS: { id: Platform; label: string; sub: string; lang: string
 
 export type PerPlatform<T> = Record<Platform, T>;
 
+export type DiagramId = "recomposition";
+
 export type Section = {
   id: string;
   title: string;
@@ -17,14 +19,51 @@ export type Section = {
   notes?: Partial<PerPlatform<string[]>>;
   compare?: { label: string; values: PerPlatform<string> }[];
   callout?: string;
+  /** Interactive diagram rendered after the prose */
+  diagram?: DiagramId;
 };
 
-export type QuizQuestion = {
-  question: string;
+type QuizBase = { question: string; explanation: string };
+
+/** A code block shown with a question, highlighted at build time. */
+export type QuizCode = { platform: Platform; code: string };
+
+export type ChoiceQuestion = QuizBase & {
+  kind?: "choice";
   options: string[];
   /** Index into options */
   answer: number;
-  explanation: string;
+};
+
+/** Predict the output or behavior of a snippet. */
+export type PredictQuestion = QuizBase & QuizCode & { kind: "predict"; options: string[]; answer: number };
+
+/** Click the faulty line. `answer` is the 1-based line number in `code`. */
+export type BugQuestion = QuizBase & QuizCode & { kind: "bug"; answer: number };
+
+/** Put `items` in order. `items` is the correct order; the quiz shuffles them. */
+export type OrderQuestion = QuizBase & { kind: "order"; items: string[] };
+
+export type QuizQuestion = ChoiceQuestion | PredictQuestion | BugQuestion | OrderQuestion;
+
+/** A saved answer: an option index, a line number (bug), or an ordering of item indices (order). */
+export type QuizAnswer = number | number[] | null;
+
+export type ExercisePlatform = "android" | "ios";
+
+export type ExerciseBlank = {
+  hint: string;
+  /** Accepted besides the solution text between the markers. Compared whitespace-insensitively. */
+  accept?: string[];
+};
+
+export type Exercise = {
+  /** Folder under content/<chapter>/exercises/ with rn.tsx, android.kt, ios.swift. Blanks in the native files are wrapped in block-comment markers: /*[*\/ answer /*]*\/ */
+  id: string;
+  title: string;
+  prompt: string;
+  /** One entry per marker, in file order */
+  blanks: Record<ExercisePlatform, ExerciseBlank[]>;
 };
 
 export type Chapter = {
@@ -35,6 +74,7 @@ export type Chapter = {
   gotchas: { title: string; body: string }[];
   cheatsheet: PerPlatform<string>[];
   quiz: QuizQuestion[];
+  exercises?: Exercise[];
 };
 
 export type OutlineChapter = {

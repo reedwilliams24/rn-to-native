@@ -62,6 +62,19 @@ export const state: Chapter = {
         "No stale closures. Because writes land immediately and you read the variable directly, `count++` twice in one handler gives you `+2`. The `setCount(c => c + 1)` updater pattern isn't needed on native.",
     },
     {
+      id: "what-reruns",
+      title: "See it: what re-runs, and what keeps its state",
+      prose: [
+        "**React** re-renders the component that owns the changed state and, by default, everything below it. As the docs put it, \"React normally re-renders a component whenever its parent re-renders.\" Wrapping a child in `memo` skips it when every prop is `Object.is`-equal to last time ([React: memo](https://react.dev/reference/react/memo)).",
+        "**Compose** re-runs the composables that read the changed state, and skips a child whose inputs haven't changed ([Compose: lifecycle, skipping](https://developer.android.com/develop/ui/compose/lifecycle#skipping)). Without strong skipping, a parameter of an unstable type makes the composable non-skippable, and `List`, `Set` and `Map` count as unstable ([Compose: stability](https://developer.android.com/develop/ui/compose/performance/stability)). Strong skipping is on by default from Kotlin 2.0.20. It compares unstable parameters by instance (`===`) and stable ones with `equals()` ([Compose: strong skipping](https://developer.android.com/develop/ui/compose/performance/stability/strongskipping)).",
+        "**SwiftUI** treats a view's inputs and its `@State` and environment as its dependencies, and re-runs `body` only for views \"that have new values or other changed dependencies\" ([WWDC23: Demystify SwiftUI performance](https://developer.apple.com/videos/play/wwdc2023/10160/)).",
+        "State is tied to *identity*, and that's where RN habits break. React keeps state for the same component type at the same position, so `isFancy ? <Counter isFancy /> : <Counter />` keeps the count ([React: preserving and resetting state](https://react.dev/learn/preserving-and-resetting-state)). Compose identifies each instance by its *call site*, so the calls in `if` and `else` are two different instances ([Compose: lifecycle](https://developer.android.com/develop/ui/compose/lifecycle)). SwiftUI treats each branch of an `if` as a different view with a distinct identity, which can lose state ([WWDC21: Demystify SwiftUI](https://developer.apple.com/videos/play/wwdc2021/10022/)). On both native platforms the fix is one call with a conditional argument or modifier.",
+      ],
+      diagram: "recomposition",
+      callout:
+        "To check this in a real app, Android Studio's Layout Inspector shows recomposition and skip counts per composable, and Instruments has a SwiftUI template that records `body` evaluations.",
+    },
+    {
       id: "use-state",
       title: "useState → remember / @State",
       prose: [
@@ -290,6 +303,27 @@ export const state: Chapter = {
     { rn: "Survive process death", android: "`rememberSaveable`", ios: "`@SceneStorage`" },
     { rn: "Custom hook / store", android: "`ViewModel` + `StateFlow`", ios: "`@Observable` class" },
   ],
+  exercises: [
+    {
+      id: "like-button",
+      title: "Lift a like toggle",
+      prompt: "The parent owns `liked` and the child flips it. Translate the state and the callback.",
+      blanks: {
+        android: [
+          { hint: "The Kotlin function type for a callback that takes nothing and returns nothing: TypeScript's `() => void`." },
+          { hint: "The delegation keyword that lets you read and assign `liked` directly instead of `liked.value`." },
+          { hint: "Keeps the state across recompositions, the way `useState` keeps its value across renders." },
+          { hint: "There's no setter. Assign the new value straight to the variable.", accept: ["liked = liked.not()"] },
+        ],
+        ios: [
+          { hint: "The child reads *and writes* the parent's state. One property wrapper replaces the `liked` + `onToggle` prop pair." },
+          { hint: "Flip the `Bool` in place. `Bool` has a method for exactly this.", accept: ["liked = !liked", "self.liked.toggle()", "self.liked = !self.liked"] },
+          { hint: "The property wrapper for state the view owns: SwiftUI's `useState`." },
+          { hint: "Prefix the state with `$` to pass a `Binding` instead of a copy of the value.", accept: ["self.$liked"] },
+        ],
+      },
+    },
+  ],
   quiz: [
     {
       question: "A Compose counter always shows 0, even though the button runs `count++`. The code is `var count by mutableStateOf(0)`. What's wrong?",
@@ -351,6 +385,67 @@ export const state: Chapter = {
       ],
       answer: 1,
       explanation: "`@State` keeps the same instance for the view's lifetime, and SwiftUI doesn't track property writes on a plain class. A stored `var` on the struct is reset whenever the parent re-creates the view.",
+    },
+    {
+      kind: "predict",
+      platform: "android",
+      question: "`Screen` is on display. You tap the button once. What prints?",
+      code: `@Composable
+fun Screen() {
+    var count by remember { mutableIntStateOf(0) }
+    println("Screen")
+    Header("Todos")
+    Button(onClick = { count++ }) {
+        println("Button content")
+        Text("Tapped $count times")
+    }
+}
+
+@Composable
+fun Header(title: String) {
+    println("Header")
+    Text(title)
+}`,
+      options: [
+        "`Screen`, `Header`, `Button content`",
+        "`Screen`, `Button content`",
+        "Only `Button content`",
+        "Nothing. Writing state in `onClick` doesn't recompose.",
+      ],
+      answer: 2,
+      explanation: "Compose tracks state *reads* per composable scope. `count` is only read inside the `Button` content lambda, so only that lambda re-runs. Even if `Screen` re-ran, `Header` would be skipped because `title` didn't change. React would re-render `Screen` and `Header` unless you add `memo`.",
+    },
+    {
+      kind: "bug",
+      platform: "ios",
+      question: "Tapping the button never updates its label. Which line is the bug?",
+      code: `class Cart {
+    var count = 0
+}
+
+struct CartButton: View {
+    @State private var cart = Cart()
+
+    var body: some View {
+        Button("Add (\\(cart.count))") {
+            cart.count += 1
+        }
+    }
+}`,
+      answer: 1,
+      explanation: "SwiftUI only sees property changes on classes marked `@Observable` (iOS 17). `@State` keeps the same `Cart` instance, and `count += 1` changes it without telling SwiftUI. Use `@Observable class Cart`, or make `Cart` a `struct` so writes count as a new value.",
+    },
+    {
+      kind: "order",
+      question: "In Compose, put the steps after a tap on a counter button in order.",
+      items: [
+        "`onClick` runs and writes `count++`",
+        "Compose marks the scopes that read `count` as invalid",
+        "On the next frame, only those scopes recompose",
+        "Layout measures and places anything that changed",
+        "Drawing renders the new frame",
+      ],
+      explanation: "Writing state doesn't re-run anything right away. It invalidates the scopes that read it, and the next frame runs the three phases: composition, then layout, then drawing. That's why `count` already holds the new value on the line after `count++`, unlike React's `setState`.",
     },
   ],
 };
