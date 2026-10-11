@@ -8,7 +8,7 @@ export const PLATFORMS: { id: Platform; label: string; sub: string; lang: string
 
 export type PerPlatform<T> = Record<Platform, T>;
 
-export type DiagramId = "recomposition";
+export type DiagramId = "recomposition" | "threading";
 
 export type Section = {
   id: string;

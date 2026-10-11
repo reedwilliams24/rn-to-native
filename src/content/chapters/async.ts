@@ -123,6 +123,16 @@ export const async: Chapter = {
       },
     },
     {
+      id: "threading-timeline",
+      title: "See it: one tap, main thread vs background",
+      prose: [
+        "**React Native** renders with two threads: the UI thread, \"the only thread that can manipulate host views\", and the JavaScript thread, where React's render phase and layout run ([RN: threading model](https://reactnative.dev/architecture/threading-model)). Your JS never runs anywhere else, so you can't touch the UI from the wrong thread, but you can block the JS thread. When it's busy across frames, a `TouchableOpacity` stops responding because the JS thread can't process the touch events sent over from the main thread. A `ScrollView` keeps scrolling because it lives on the main thread ([RN: performance](https://reactnative.dev/docs/performance)).",
+        "**Android** has two rules: don't block the UI thread, and don't access the UI toolkit from outside it ([Android: processes and threads](https://developer.android.com/guide/components/processes-and-threads)). Dispatchers cover the first one. `Dispatchers.Main` is for UI work and quick work, `Dispatchers.IO` for disk and network I/O, and `Dispatchers.Default` for CPU-intensive work like parsing JSON ([Android: coroutines best practices](https://developer.android.com/kotlin/coroutines/coroutines-adv)). If the app doesn't respond to input within 5 seconds, the system shows an ANR ([Android: ANRs](https://developer.android.com/topic/performance/vitals/anr)). For the second rule, the docs say \"You must always be on the UI thread when calling any method on any view\" ([Android: View](https://developer.android.com/reference/android/view/View)).",
+        "**Swift**'s `MainActor` is \"a singleton actor whose executor is equivalent to the main dispatch queue\" ([Swift: MainActor](https://developer.apple.com/documentation/swift/mainactor)). At each `await`, Swift can suspend your code and run other code on that thread instead ([Swift book: Concurrency](https://docs.swift.org/swift-book/documentation/the-swift-programming-language/concurrency/)), so a main-actor function that's waiting doesn't freeze the UI. Nonisolated code can't touch main-actor state, and the Swift 6 language mode turns that into a compile error ([Swift 6 migration: data race safety](https://www.swift.org/migration/documentation/swift-6-concurrency-migration-guide/dataracesafety)). Long synchronous work on the main thread shows up as a hang ([Apple: understanding hangs](https://developer.apple.com/documentation/xcode/understanding-hangs-in-your-app)). In code that isn't checked, Xcode's Main Thread Checker catches UI updates made on background threads ([Apple: diagnosing issues early](https://developer.apple.com/documentation/xcode/diagnosing-memory-thread-and-crash-issues-early)).",
+      ],
+      diagram: "threading",
+    },
+    {
       id: "launch",
       title: "Starting async work from the UI",
       prose: [
