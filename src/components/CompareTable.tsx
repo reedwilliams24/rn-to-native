@@ -6,7 +6,7 @@ export function CompareTable({
   rows,
   rowLabel,
 }: {
-  rows: { label?: string; values: PerPlatform<string> }[];
+  rows: { id?: string; label?: string; values: PerPlatform<string> }[];
   rowLabel?: string;
 }) {
   const hasLabel = rows.some((r) => r.label);
@@ -28,7 +28,7 @@ export function CompareTable({
         </thead>
         <tbody className="divide-y divide-zinc-100">
           {rows.map((r, i) => (
-            <tr key={i} className="align-top">
+            <tr key={i} id={r.id} className="scroll-mt-24 align-top">
               {hasLabel ? <td className="px-4 py-2.5 font-medium text-zinc-900">{r.label}</td> : null}
               {PLATFORMS.map((p) => (
                 <td key={p.id} data-platform={p.id} className="px-4 py-2.5 text-zinc-700">
