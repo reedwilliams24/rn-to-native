@@ -1,22 +1,22 @@
 @Composable
-fun SaveButton(todo: Todo, api: TodoApi) {
+fun SaveButton(todo: Todo, api: TodoApi) { // @link:fn
     // Cancelled automatically when SaveButton leaves the composition
-    val scope = rememberCoroutineScope()
-    var saving by remember { mutableStateOf(false) }
+    val scope = rememberCoroutineScope() // @link:scope
+    var saving by remember { mutableStateOf(false) } // @link:state
 
-    Button(
-        enabled = !saving,
-        onClick = {
-            scope.launch {
-                saving = true
-                try {
-                    api.save(todo)
-                } finally {
-                    saving = false
+    Button( // @link:button
+        enabled = !saving, // @link:disabled
+        onClick = { // @link:handler
+            scope.launch { // @link:handler,scope
+                saving = true // @link:start
+                try { // @link:try
+                    api.save(todo) // @link:save
+                } finally { // @link:finally
+                    saving = false // @link:finish
                 }
             }
         },
     ) {
-        Text(if (saving) "Saving…" else "Save")
+        Text(if (saving) "Saving…" else "Save") // @link:label
     }
 }

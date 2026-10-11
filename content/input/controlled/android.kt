@@ -1,13 +1,13 @@
 @Composable
-fun PinField() {
-    var pin by remember { mutableStateOf("") }
+fun PinField() { // @link:fn
+    var pin by remember { mutableStateOf("") } // @link:state
 
-    OutlinedTextField(
-        value = pin,
+    OutlinedTextField( // @link:field
+        value = pin, // @link:value
         // Reshape input before it lands: whatever you store is what's shown
-        onValueChange = { new -> pin = new.filter(Char::isDigit).take(6) },
-        label = { Text("PIN") },
+        onValueChange = { new -> pin = new.filter(Char::isDigit).take(6) }, // @link:filter
+        label = { Text("PIN") }, // @link:label
         singleLine = true,
-        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.NumberPassword),
+        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.NumberPassword), // @link:kb
     )
 }

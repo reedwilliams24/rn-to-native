@@ -3,25 +3,25 @@ class TodoListViewModelTest {
     val mainDispatcher = MainDispatcherRule()
 
     @Test
-    fun `refresh shows loaded todos`() = runTest {
-        val repo = FakeTodoRepository(Result.success(listOf(Todo("1", "Buy milk"))))
-        val viewModel = TodoListViewModel(repo)
+    fun `refresh shows loaded todos`() = runTest { // @link:ok-test
+        val repo = FakeTodoRepository(Result.success(listOf(Todo("1", "Buy milk")))) // @link:fake,fake-ok
+        val viewModel = TodoListViewModel(repo) // @link:create-ok
 
-        viewModel.refresh()
-        advanceUntilIdle()
+        viewModel.refresh() // @link:refresh-ok
+        advanceUntilIdle() // @link:wait-ok
 
-        assertEquals(TodoListState.Loaded(listOf(Todo("1", "Buy milk"))), viewModel.state.value)
-        assertEquals(1, repo.loadCalls)
+        assertEquals(TodoListState.Loaded(listOf(Todo("1", "Buy milk"))), viewModel.state.value) // @link:assert-ok
+        assertEquals(1, repo.loadCalls) // @link:calls
     }
 
     @Test
-    fun `a network failure shows an error`() = runTest {
-        val viewModel = TodoListViewModel(FakeTodoRepository(Result.failure(IOException("offline"))))
+    fun `a network failure shows an error`() = runTest { // @link:err-test
+        val viewModel = TodoListViewModel(FakeTodoRepository(Result.failure(IOException("offline")))) // @link:create-err,fake-err
 
-        viewModel.refresh()
-        advanceUntilIdle()
+        viewModel.refresh() // @link:refresh-err
+        advanceUntilIdle() // @link:wait-err
 
-        assertEquals(TodoListState.Error("Couldn't load todos"), viewModel.state.value)
+        assertEquals(TodoListState.Error("Couldn't load todos"), viewModel.state.value) // @link:assert-err
     }
 }
 

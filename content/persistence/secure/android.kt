@@ -1,4 +1,4 @@
-// The key never leaves the Keystore. Store the encrypted bytes anywhere (e.g. DataStore).
+// The key never leaves the Keystore. Store the encrypted bytes anywhere (e.g. DataStore). // @link:platform
 class TokenCipher(private val alias: String = "auth-token-key") {
     private val keyStore = KeyStore.getInstance("AndroidKeyStore").apply { load(null) }
 
@@ -15,13 +15,13 @@ class TokenCipher(private val alias: String = "auth-token-key") {
             }
             .generateKey()
 
-    fun encrypt(plain: String): ByteArray {
+    fun encrypt(plain: String): ByteArray { // @link:save
         val cipher = Cipher.getInstance("AES/GCM/NoPadding")
         cipher.init(Cipher.ENCRYPT_MODE, key())
         return cipher.iv + cipher.doFinal(plain.toByteArray()) // 12-byte IV, then ciphertext
     }
 
-    fun decrypt(blob: ByteArray): String {
+    fun decrypt(blob: ByteArray): String { // @link:read
         val cipher = Cipher.getInstance("AES/GCM/NoPadding")
         cipher.init(Cipher.DECRYPT_MODE, key(), GCMParameterSpec(128, blob, 0, 12))
         return String(cipher.doFinal(blob, 12, blob.size - 12))

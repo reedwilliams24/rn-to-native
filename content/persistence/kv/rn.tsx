@@ -1,10 +1,10 @@
-type SortOrder = 'newest' | 'oldest' | 'title';
-const SORT_KEY = 'settings.sortOrder';
+type SortOrder = 'newest' | 'oldest' | 'title'; // @link:type
+const SORT_KEY = 'settings.sortOrder'; // @link:key
 
-async function getSortOrder(): Promise<SortOrder> {
-  return ((await AsyncStorage.getItem(SORT_KEY)) as SortOrder | null) ?? 'newest';
+async function getSortOrder(): Promise<SortOrder> { // @link:read
+  return ((await AsyncStorage.getItem(SORT_KEY)) as SortOrder | null) ?? 'newest'; // @link:read,default
 }
 
-async function setSortOrder(order: SortOrder) {
-  await AsyncStorage.setItem(SORT_KEY, order);
+async function setSortOrder(order: SortOrder) { // @link:write
+  await AsyncStorage.setItem(SORT_KEY, order); // @link:write
 }

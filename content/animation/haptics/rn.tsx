@@ -1,12 +1,12 @@
-import * as Haptics from 'expo-haptics';
+import * as Haptics from 'expo-haptics'; // @link:import
 
-function CompleteButton({ onComplete }: { onComplete: () => void }) {
+function CompleteButton({ onComplete }: { onComplete: () => void }) { // @link:fn
   return (
-    <Button
-      title="Complete"
-      onPress={() => {
-        Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
-        onComplete();
+    <Button // @link:button
+      title="Complete" // @link:label
+      onPress={() => { // @link:handler
+        Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success); // @link:haptic
+        onComplete(); // @link:complete
       }}
     />
   );

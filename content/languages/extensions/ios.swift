@@ -1,18 +1,18 @@
-struct Todo {
+struct Todo { // @link:type
     var title: String
     var done: Bool
     var dueDate: Date
 }
 
-extension String {
-    var capitalizedFirst: String {
-        prefix(1).uppercased() + dropFirst()
+extension String { // @link:cap
+    var capitalizedFirst: String { // @link:cap
+        prefix(1).uppercased() + dropFirst() // @link:capbody
     }
 }
 
-extension Todo {
-    var isOverdue: Bool { !done && dueDate < .now }
+extension Todo { // @link:overdue
+    var isOverdue: Bool { !done && dueDate < .now } // @link:overdue,overduebody
 }
 
-let label = "milk".capitalizedFirst // "Milk"
-let late = todos.filter(\.isOverdue)
+let label = "milk".capitalizedFirst // "Milk" // @link:uselabel
+let late = todos.filter(\.isOverdue) // @link:uselate

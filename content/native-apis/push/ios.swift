@@ -1,13 +1,13 @@
-// Signing & Capabilities: Push Notifications
+// Signing & Capabilities: Push Notifications // @link:import
 final class AppDelegate: NSObject, UIApplicationDelegate {
     func application(
         _ application: UIApplication,
-        didFinishLaunchingWithOptions options: [UIApplication.LaunchOptionsKey: Any]? = nil
+        didFinishLaunchingWithOptions options: [UIApplication.LaunchOptionsKey: Any]? = nil // @link:register
     ) -> Bool {
         Task {
             let center = UNUserNotificationCenter.current()
-            if try await center.requestAuthorization(options: [.alert, .badge, .sound]) {
-                application.registerForRemoteNotifications()
+            if try await center.requestAuthorization(options: [.alert, .badge, .sound]) { // @link:ask
+                application.registerForRemoteNotifications() // @link:register
             }
         }
         return true
@@ -15,10 +15,10 @@ final class AppDelegate: NSObject, UIApplicationDelegate {
 
     func application(
         _ application: UIApplication,
-        didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data
+        didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data // @link:token,refresh
     ) {
-        let token = deviceToken.map { String(format: "%02x", $0) }.joined()
-        Task { await api.registerDevice(token) }
+        let token = deviceToken.map { String(format: "%02x", $0) }.joined() // @link:token
+        Task { await api.registerDevice(token) } // @link:send
     }
 }
 

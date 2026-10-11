@@ -1,20 +1,20 @@
-function SearchResults({ query }: { query: string }) {
-  const [results, setResults] = useState<Todo[]>([]);
+function SearchResults({ query }: { query: string }) { // @link:fn
+  const [results, setResults] = useState<Todo[]>([]); // @link:state
 
-  useEffect(() => {
-    const controller = new AbortController();
-    const timer = setTimeout(async () => {
+  useEffect(() => { // @link:effect
+    const controller = new AbortController(); // @link:cancel
+    const timer = setTimeout(async () => { // @link:debounce
       try {
-        setResults(await api.search(query, { signal: controller.signal }));
-      } catch (e) {
-        if (!controller.signal.aborted) console.warn(e);
+        setResults(await api.search(query, { signal: controller.signal })); // @link:search
+      } catch (e) { // @link:catch
+        if (!controller.signal.aborted) console.warn(e); // @link:catch
       }
-    }, 300);
-    return () => {
+    }, 300); // @link:debounce
+    return () => { // @link:cancel
       clearTimeout(timer);
-      controller.abort();
+      controller.abort(); // @link:cancel
     };
-  }, [query]);
+  }, [query]); // @link:effect
 
-  return <FlatList data={results} renderItem={({ item }) => <Text>{item.title}</Text>} />;
+  return <FlatList data={results} renderItem={({ item }) => <Text>{item.title}</Text>} />; // @link:list
 }

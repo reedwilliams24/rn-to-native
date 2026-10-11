@@ -1,16 +1,16 @@
-struct SaveButton: View {
-    let todo: Todo
-    @State private var saving = false
+struct SaveButton: View { // @link:fn
+    let todo: Todo // @link:fn
+    @State private var saving = false // @link:state
 
     var body: some View {
-        Button(saving ? "Saving…" : "Save") {
+        Button(saving ? "Saving…" : "Save") { // @link:button,label,handler
             // An unstructured Task: it keeps running if the view disappears
-            Task {
-                saving = true
-                defer { saving = false }
-                try? await saveTodo(todo)
+            Task { // @link:scope
+                saving = true // @link:start
+                defer { saving = false } // @link:finally,finish
+                try? await saveTodo(todo) // @link:save,try
             }
         }
-        .disabled(saving)
+        .disabled(saving) // @link:disabled
     }
 }

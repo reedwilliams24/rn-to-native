@@ -1,11 +1,11 @@
 struct Tabs: View {
     var body: some View {
-        TabView {
+        TabView { // @link:bar,tabdef
             // Each tab gets its own stack, like a nested stack navigator
-            NavigationStack { TodosScreen() }
-                .tabItem { Label("Todos", systemImage: "house") }
-            NavigationStack { SettingsScreen() }
-                .tabItem { Label("Settings", systemImage: "gear") }
+            NavigationStack { TodosScreen() } // @link:todos-screen
+                .tabItem { Label("Todos", systemImage: "house") } // @link:todos,todos-icon
+            NavigationStack { SettingsScreen() } // @link:settings-screen
+                .tabItem { Label("Settings", systemImage: "gear") } // @link:settings,settings-icon
         }
     }
 }

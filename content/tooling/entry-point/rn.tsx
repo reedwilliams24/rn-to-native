@@ -1,14 +1,14 @@
-// index.ts: the JS entry Metro bundles
+// index.ts: the JS entry Metro bundles // @link:entry
 import { registerRootComponent } from 'expo';
 import App from './App';
 
-registerRootComponent(App);
+registerRootComponent(App); // @link:register
 
-// App.tsx: the root component
-export default function App() {
+// App.tsx: the root component // @link:root
+export default function App() { // @link:root
   return (
-    <ThemeProvider>
-      <TodoScreen />
+    <ThemeProvider>{/* @link:theme */}
+      <TodoScreen />{/* @link:screen */}
     </ThemeProvider>
   );
 }

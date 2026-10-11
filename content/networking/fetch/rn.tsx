@@ -1,17 +1,17 @@
-const BASE_URL = 'https://api.example.com';
+const BASE_URL = 'https://api.example.com'; // @link:base
 
-async function getTodos(): Promise<Todo[]> {
-  const res = await fetch(`${BASE_URL}/todos`);
-  if (!res.ok) throw new Error(`HTTP ${res.status}`);
-  return parseTodos(await res.json());
+async function getTodos(): Promise<Todo[]> { // @link:get
+  const res = await fetch(`${BASE_URL}/todos`); // @link:get-req
+  if (!res.ok) throw new Error(`HTTP ${res.status}`); // @link:check
+  return parseTodos(await res.json()); // @link:decode
 }
 
-async function createTodo(input: NewTodo): Promise<Todo> {
-  const res = await fetch(`${BASE_URL}/todos`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(input),
+async function createTodo(input: NewTodo): Promise<Todo> { // @link:create
+  const res = await fetch(`${BASE_URL}/todos`, { // @link:create-req
+    method: 'POST', // @link:post
+    headers: { 'Content-Type': 'application/json' }, // @link:ctype
+    body: JSON.stringify(input), // @link:body
   });
-  if (!res.ok) throw new Error(`HTTP ${res.status}`);
-  return res.json();
+  if (!res.ok) throw new Error(`HTTP ${res.status}`); // @link:check
+  return res.json(); // @link:decode
 }

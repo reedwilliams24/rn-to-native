@@ -1,22 +1,22 @@
-struct SignUp: View {
-    let onSubmit: (String) -> Void
-    @State private var email = ""
-    @State private var submitted = false
+struct SignUp: View { // @link:fn
+    let onSubmit: (String) -> Void // @link:fn
+    @State private var email = "" // @link:email
+    @State private var submitted = false // @link:submitted
 
-    private var valid: Bool { email.contains("@") }
+    private var valid: Bool { email.contains("@") } // @link:valid
 
     var body: some View {
-        Form {
+        Form { // @link:container
             Section {
-                TextField("Email", text: $email)
+                TextField("Email", text: $email) // @link:field
             } footer: {
-                if submitted && !valid {
-                    Text("Enter a valid email").foregroundStyle(.red)
+                if submitted && !valid { // @link:error
+                    Text("Enter a valid email").foregroundStyle(.red) // @link:errortext
                 }
             }
-            Button("Sign up") {
-                submitted = true
-                if valid { onSubmit(email) }
+            Button("Sign up") { // @link:button
+                submitted = true // @link:submit
+                if valid { onSubmit(email) } // @link:send
             }
         }
     }

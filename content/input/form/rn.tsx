@@ -1,18 +1,18 @@
-function SignUp({ onSubmit }: { onSubmit: (email: string) => void }) {
-  const [email, setEmail] = useState('');
-  const [submitted, setSubmitted] = useState(false);
-  const valid = email.includes('@');
-  const error = submitted && !valid ? 'Enter a valid email' : null;
+function SignUp({ onSubmit }: { onSubmit: (email: string) => void }) { // @link:fn
+  const [email, setEmail] = useState(''); // @link:email
+  const [submitted, setSubmitted] = useState(false); // @link:submitted
+  const valid = email.includes('@'); // @link:valid
+  const error = submitted && !valid ? 'Enter a valid email' : null; // @link:error
 
   return (
-    <View style={{ gap: 8 }}>
-      <TextInput value={email} onChangeText={setEmail} placeholder="Email" />
-      {error && <Text style={{ color: 'red' }}>{error}</Text>}
-      <Button
-        title="Sign up"
+    <View style={{ gap: 8 }}>{/* @link:container */}
+      <TextInput value={email} onChangeText={setEmail} placeholder="Email" />{/* @link:field */}
+      {error && <Text style={{ color: 'red' }}>{error}</Text>}{/* @link:errortext */}
+      <Button // @link:button
+        title="Sign up" // @link:button
         onPress={() => {
-          setSubmitted(true);
-          if (valid) onSubmit(email);
+          setSubmitted(true); // @link:submit
+          if (valid) onSubmit(email); // @link:send
         }}
       />
     </View>

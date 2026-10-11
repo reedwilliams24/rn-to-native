@@ -1,16 +1,16 @@
-function AddTodo() {
-  const [adding, setAdding] = useState(false);
+function AddTodo() { // @link:fn
+  const [adding, setAdding] = useState(false); // @link:state
 
   return (
     <>
-      <Button title="New todo" onPress={() => setAdding(true)} />
-      <Modal
-        visible={adding}
+      <Button title="New todo" onPress={() => setAdding(true)} />{/* @link:open */}
+      <Modal // @link:modal
+        visible={adding} // @link:modal
         animationType="slide"
-        presentationStyle="pageSheet"
-        onRequestClose={() => setAdding(false)}
+        presentationStyle="pageSheet" // @link:detents
+        onRequestClose={() => setAdding(false)} // @link:dismiss
       >
-        <NewTodoForm onDone={() => setAdding(false)} />
+        <NewTodoForm onDone={() => setAdding(false)} />{/* @link:form */}
       </Modal>
     </>
   );

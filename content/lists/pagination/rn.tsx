@@ -1,14 +1,14 @@
-type Props = { todos: Todo[]; loading: boolean; loadMore: () => void };
+type Props = { todos: Todo[]; loading: boolean; loadMore: () => void }; // @link:props
 
-function InfiniteList({ todos, loading, loadMore }: Props) {
+function InfiniteList({ todos, loading, loadMore }: Props) { // @link:fn
   return (
-    <FlatList
-      data={todos}
-      keyExtractor={(t) => t.id}
-      renderItem={({ item }) => <TodoRow todo={item} />}
-      onEndReached={loadMore}
-      onEndReachedThreshold={0.5}
-      ListFooterComponent={loading ? <ActivityIndicator /> : null}
+    <FlatList // @link:list
+      data={todos} // @link:items
+      keyExtractor={(t) => t.id} // @link:items
+      renderItem={({ item }) => <TodoRow todo={item} />} // @link:row
+      onEndReached={loadMore} // @link:trigger
+      onEndReachedThreshold={0.5} // @link:threshold
+      ListFooterComponent={loading ? <ActivityIndicator /> : null} // @link:footer
     />
   );
 }

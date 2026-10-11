@@ -1,22 +1,22 @@
-function TodoList() {
-  const [todos, setTodos] = useState<TodoRow[]>([]);
-  const reload = useCallback(() => listTodos().then(setTodos), []);
+function TodoList() { // @link:screen
+  const [todos, setTodos] = useState<TodoRow[]>([]); // @link:todos
+  const reload = useCallback(() => listTodos().then(setTodos), []); // @link:query
 
-  useEffect(() => {
+  useEffect(() => { // @link:query
     reload();
   }, [reload]);
 
-  const add = async (title: string) => {
-    await addTodo(title);
-    reload(); // nothing tells the UI that the table changed
+  const add = async (title: string) => { // @link:add
+    await addTodo(title); // @link:add
+    reload(); // nothing tells the UI that the table changed // @link:reload
   };
 
   return (
-    <FlatList
+    <FlatList // @link:list
       data={todos}
       keyExtractor={(t) => String(t.id)}
-      renderItem={({ item }) => <Text>{item.title}</Text>}
-      ListFooterComponent={<Button title="Add" onPress={() => add('New todo')} />}
+      renderItem={({ item }) => <Text>{item.title}</Text>} // @link:row
+      ListFooterComponent={<Button title="Add" onPress={() => add('New todo')} />} // @link:addbtn
     />
   );
 }

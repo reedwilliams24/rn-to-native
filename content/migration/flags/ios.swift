@@ -1,9 +1,9 @@
-// Later the native app is the shell, and the flag picks the legacy RN screen.
+// Later the native app is the shell, and the flag picks the legacy RN screen. // @link:shell
 @Observable
 final class FeatureFlags {
     var enabled: Set<String> = []
 
-    func isEnabled(_ key: String) -> Bool { enabled.contains(key) }
+    func isEnabled(_ key: String) -> Bool { enabled.contains(key) } // @link:iface
 }
 
 struct ProfileScreen: View {
@@ -11,11 +11,11 @@ struct ProfileScreen: View {
 
     var body: some View {
         List {
-            NavigationLink("Settings") {
-                if flags.isEnabled("native_settings") {
-                    SettingsScreen() // new SwiftUI screen
+            NavigationLink("Settings") { // @link:fn
+                if flags.isEnabled("native_settings") { // @link:check
+                    SettingsScreen() // new SwiftUI screen // @link:new
                 } else {
-                    ReactScreen(moduleName: "Settings") // legacy RN screen
+                    ReactScreen(moduleName: "Settings") // legacy RN screen // @link:legacy
                 }
             }
         }

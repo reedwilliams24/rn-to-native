@@ -1,11 +1,11 @@
 @Composable
-fun CompleteButton(onComplete: () -> Unit) {
-    val haptics = LocalHapticFeedback.current
+fun CompleteButton(onComplete: () -> Unit) { // @link:fn
+    val haptics = LocalHapticFeedback.current // @link:import
 
-    Button(onClick = {
-        haptics.performHapticFeedback(HapticFeedbackType.Confirm)
-        onComplete()
+    Button(onClick = { // @link:button,handler
+        haptics.performHapticFeedback(HapticFeedbackType.Confirm) // @link:haptic
+        onComplete() // @link:complete
     }) {
-        Text("Complete")
+        Text("Complete") // @link:label
     }
 }

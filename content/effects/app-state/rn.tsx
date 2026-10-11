@@ -1,10 +1,10 @@
-function Feed({ onRefresh }: { onRefresh: () => void }) {
-  useEffect(() => {
-    const sub = AppState.addEventListener('change', (state) => {
-      if (state === 'active') onRefresh();
+function Feed({ onRefresh }: { onRefresh: () => void }) { // @link:fn
+  useEffect(() => { // @link:effect
+    const sub = AppState.addEventListener('change', (state) => { // @link:listen
+      if (state === 'active') onRefresh(); // @link:active
     });
     return () => sub.remove();
-  }, [onRefresh]);
+  }, [onRefresh]); // @link:effect
 
-  return <FeedList />;
+  return <FeedList />; // @link:content
 }

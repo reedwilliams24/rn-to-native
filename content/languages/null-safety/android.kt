@@ -1,21 +1,21 @@
-data class User(
+data class User( // @link:type
     val name: String,
     val nickname: String? = null,
 )
 
-fun displayName(user: User?): String =
-    user?.nickname ?: user?.name ?: "Guest"
+fun displayName(user: User?): String = // @link:display
+    user?.nickname ?: user?.name ?: "Guest" // @link:coalesce
 
-fun initial(user: User?): String {
-    if (user == null) return "?"
-    return user.name.take(1) // smart-cast to User
+fun initial(user: User?): String { // @link:initial
+    if (user == null) return "?" // @link:guard
+    return user.name.take(1) // smart-cast to User // @link:narrow
 }
 
-fun shortName(user: User?): String {
+fun shortName(user: User?): String { // @link:short
     // Unwrap or exit early
-    val nickname = user?.nickname ?: return "NONE"
-    return nickname.uppercase()
+    val nickname = user?.nickname ?: return "NONE" // @link:chain
+    return nickname.uppercase() // @link:chain
 }
 
 // Throws NullPointerException if null
-fun forced(user: User?) = user!!.name
+fun forced(user: User?) = user!!.name // @link:force

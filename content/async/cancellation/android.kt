@@ -1,14 +1,14 @@
 @Composable
-fun SearchResults(query: String, api: TodoApi) {
-    var results by remember { mutableStateOf(emptyList<Todo>()) }
+fun SearchResults(query: String, api: TodoApi) { // @link:fn
+    var results by remember { mutableStateOf(emptyList<Todo>()) } // @link:state
 
-    // A new query cancels the previous block, wherever it is suspended
-    LaunchedEffect(query) {
-        delay(300) // debounce: cancellation interrupts the delay
-        results = api.search(query)
+    // A new query cancels the previous block, wherever it is suspended // @link:cancel
+    LaunchedEffect(query) { // @link:effect
+        delay(300) // debounce: cancellation interrupts the delay // @link:debounce
+        results = api.search(query) // @link:search
     }
 
-    LazyColumn {
-        items(results, key = { it.id }) { Text(it.title) }
+    LazyColumn { // @link:list
+        items(results, key = { it.id }) { Text(it.title) } // @link:list
     }
 }
