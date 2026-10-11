@@ -1,6 +1,8 @@
 import Link from "next/link";
 import { Shell } from "@/components/Shell";
-import { OUTLINE } from "@/content/outline";
+import { ALL_CHAPTERS, OUTLINE } from "@/content/outline";
+import { ProgressBadge } from "@/components/ProgressBadge";
+import { ProgressSummary } from "@/components/ProgressSummary";
 import { CHAPTERS } from "@/content/chapters";
 import { PLATFORMS } from "@/content/types";
 import { PLATFORM_STYLE } from "@/components/platform";
@@ -23,12 +25,9 @@ export default function Home() {
           Every concept is shown in all three, next to each other, with notes on what actually differs and the gotchas
           that trip up RN developers.
         </p>
-        <Link
-          href="/chapters/components"
-          className="mt-6 inline-flex items-center gap-2 rounded-lg bg-zinc-900 px-4 py-2 text-sm font-medium text-white hover:bg-zinc-700"
-        >
-          Start with Chapter 1 →
-        </Link>
+        <ProgressSummary
+          chapters={ALL_CHAPTERS.filter((c) => CHAPTERS[c.slug]).map(({ slug, number, title }) => ({ slug, number, title }))}
+        />
 
         <h2 className="mt-16 text-xl font-semibold text-zinc-900">Outline</h2>
         <div className="mt-6 space-y-10">
@@ -49,13 +48,20 @@ export default function Home() {
                           <span className="mr-2 tabular-nums text-zinc-400">{c.number}</span>
                           {c.title}
                         </div>
-                        <span
-                          className={`shrink-0 rounded-full px-2 py-0.5 text-[10px] font-medium uppercase tracking-wide ${
-                            drafted ? "bg-emerald-50 text-emerald-700" : "bg-zinc-100 text-zinc-500"
-                          }`}
-                        >
-                          {drafted ? "Draft" : "Planned"}
-                        </span>
+                        {drafted ? (
+                          <ProgressBadge
+                            slug={c.slug}
+                            fallback={
+                              <span className="shrink-0 rounded-full bg-emerald-50 px-2 py-0.5 text-[10px] font-medium uppercase tracking-wide text-emerald-700">
+                                Draft
+                              </span>
+                            }
+                          />
+                        ) : (
+                          <span className="shrink-0 rounded-full bg-zinc-100 px-2 py-0.5 text-[10px] font-medium uppercase tracking-wide text-zinc-500">
+                            Planned
+                          </span>
+                        )}
                       </div>
                       <p className="mt-1 text-sm text-zinc-600">{c.summary}</p>
                     </Link>

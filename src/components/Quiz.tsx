@@ -1,11 +1,15 @@
 "use client";
 
-import { useState } from "react";
 import type { QuizQuestion } from "@/content/types";
 import { Inline } from "@/lib/inline";
+import { recordAnswer, resetQuiz, useProgress } from "@/lib/progress";
 
-export function Quiz({ questions }: { questions: QuizQuestion[] }) {
-  const [picked, setPicked] = useState<(number | null)[]>(() => questions.map(() => null));
+export function Quiz({ slug, questions }: { slug: string; questions: QuizQuestion[] }) {
+  const saved = useProgress().chapters[slug]?.answers ?? [];
+  const picked = questions.map((q, i) => {
+    const a = saved[i];
+    return typeof a === "number" && a >= 0 && a < q.options.length ? a : null;
+  });
   const answered = picked.filter((p) => p !== null).length;
   const correct = picked.filter((p, i) => p === questions[i].answer).length;
 
@@ -36,7 +40,7 @@ export function Quiz({ questions }: { questions: QuizQuestion[] }) {
                     key={oi}
                     type="button"
                     disabled={done}
-                    onClick={() => setPicked((prev) => prev.map((p, i) => (i === qi ? oi : p)))}
+                    onClick={() => recordAnswer(slug, questions, qi, oi)}
                     className={`block w-full rounded-md border px-3 py-2 text-left text-sm transition-colors ${tone}`}
                   >
                     <Inline text={opt} />
@@ -69,7 +73,7 @@ export function Quiz({ questions }: { questions: QuizQuestion[] }) {
         {answered > 0 ? (
           <button
             type="button"
-            onClick={() => setPicked(questions.map(() => null))}
+            onClick={() => resetQuiz(slug)}
             className="rounded-md border border-zinc-300 px-3 py-1 hover:bg-zinc-50"
           >
             Reset
